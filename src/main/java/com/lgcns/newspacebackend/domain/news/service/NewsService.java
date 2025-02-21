@@ -34,9 +34,12 @@ public class NewsService {
             // 프롬프트 생성 및 AI 호출
             String response = chatClient.prompt()
                     .user(String.format(
-                            "전세계 기준으로 과거 년도의 '%s' 날짜에 있었던 '%s' 주제의 뉴스 기사를 날짜 순이 아닌 유명한 순서대로 10개를 JSON 형식으로 응답해줘. " +
-                                    "link는 본문 기사 링크로 연결될 수 있게 해주고, 반드시 정확한 JSON 배열로 반환해야 하고 각 내용은 한글로 번역해서 넣어줘, 예제: " +
-                                    "[{\"title\":\"뉴스 제목\",\"content\":\"뉴스 내용\",\"date\":\"YYYY-MM-DD\",\"source\":\"뉴스사\",\"link\":\"URL\"}]",
+                            "Provide a list of 10 famous news articles from previous years that happened on '%s' worldwide, " +
+                                    "focusing on the topic '%s'. The list should be sorted by popularity, not by date. " +
+                                    "Each article must include the title, summary, date (YYYY-MM-DD format), source, and a valid URL link to the full article. " +
+                                    "Ensure the response is a strict JSON array in the following format: " +
+                                    "[{\"title\":\"News title\",\"content\":\"News summary\",\"date\":\"YYYY-MM-DD\",\"source\":\"News source\",\"link\":\"URL\"}]. " +
+                                    "Translate all content into Korean.",
                             formattedDate, category
                     ))
                     .call()
@@ -53,7 +56,7 @@ public class NewsService {
                 log.info("추출된 JSON: {}", jsonResponse);
                 return objectMapper.readValue(jsonResponse, new TypeReference<List<NewsResponseDto>>() {});
             } else {
-                log.warn("⚠ AI 응답에서 JSON 부분을 찾을 수 없음.");
+                log.warn("AI 응답에서 JSON 부분을 찾을 수 없음.");
                 return Collections.emptyList();
             }
 
