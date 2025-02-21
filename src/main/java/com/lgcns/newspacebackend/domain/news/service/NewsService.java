@@ -34,8 +34,8 @@ public class NewsService {
             // 프롬프트 생성 및 AI 호출
             String response = chatClient.prompt()
                     .user(String.format(
-                            "과거의 '%s'에 있었던 '%s' 주제의 핫한 뉴스 5개를 JSON 형식으로 응답해줘. " +
-                                    "반드시 정확한 JSON 배열로 반환해야 하고, 예제: " +
+                            "전세계 기준으로 과거 년도의 '%s' 날짜에 있었던 '%s' 주제의 뉴스 기사를 날짜 순이 아닌 유명한 순서대로 10개를 JSON 형식으로 응답해줘. " +
+                                    "link는 본문 기사 링크로 연결될 수 있게 해주고, 반드시 정확한 JSON 배열로 반환해야 하고 각 내용은 한글로 번역해서 넣어줘, 예제: " +
                                     "[{\"title\":\"뉴스 제목\",\"content\":\"뉴스 내용\",\"date\":\"YYYY-MM-DD\",\"source\":\"뉴스사\",\"link\":\"URL\"}]",
                             formattedDate, category
                     ))
