@@ -24,6 +24,7 @@ repositories {
 
     // Spring AI
     maven { url 'https://repo.spring.io/milestone' }
+
 }
 
 dependencyManagement {
@@ -61,6 +62,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.17.2'
 
     // Spring AI
+
     implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
 }
 
