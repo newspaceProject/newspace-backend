@@ -6,9 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name= "user")
+@Data
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,7 +31,7 @@ public class User {
 	@Column(name = "profile_image", nullable = false)
 	private String profileImage;
 	
-	@Column(name = "role", nullable = false)
-	private String role;
+	@Column(name = "user_role", nullable = false)
+	private UserRole userRole;
 	
 }
