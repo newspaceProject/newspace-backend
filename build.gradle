@@ -24,7 +24,6 @@ repositories {
 
     // Spring AI
     maven { url 'https://repo.spring.io/milestone' }
-
 }
 
 dependencyManagement {
