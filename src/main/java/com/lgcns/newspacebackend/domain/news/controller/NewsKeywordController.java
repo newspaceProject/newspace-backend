@@ -31,7 +31,7 @@ public class NewsKeywordController {
     // 키워드 수정
     @PutMapping("/{keywordId}")
     public ResponseEntity<NewsKeywordResponseDto> updateNewsKeyword(@PathVariable Long keywordId,
-                                                  @RequestBody NewsKeywordRequestDto requestDto) {
+                                                                    @RequestBody NewsKeywordRequestDto requestDto) {
         return ResponseEntity.ok(newsKeywordService.updateNewsKeyword(keywordId, requestDto));
     }
 
