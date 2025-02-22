@@ -1,4 +1,4 @@
-package com.lgcns.newspacebackend.domain.notice.entity;
+package com.lgcns.newspacebackend.domain.news.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,16 +14,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Notice {
+public class NewsCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
+    private String name;
 
-    private boolean isMain;
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setName(String name) {
+        this.name = name;
     }
 }

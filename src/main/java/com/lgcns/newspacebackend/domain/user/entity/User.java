@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,6 +48,7 @@ public class User {
 
     @Column(length = 250)
     private String accessToken;
+
     private Date accessTokenExpirationTime;
 
     @Column(length = 250)
@@ -62,5 +64,4 @@ public class User {
 		this.refreshToken = refreshTokenInfo.getRefreshToken();
 		this.refreshTokenExpirationTime = refreshTokenInfo.getRefreshTokenExpireTime();
 	}
-    
 }

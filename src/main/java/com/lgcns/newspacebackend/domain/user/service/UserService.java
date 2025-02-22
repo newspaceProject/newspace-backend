@@ -79,5 +79,4 @@ public class UserService {
         // 현재 시간과 비교하여 유효 여부 반환
         return !refreshTokenExpirationTime.isBefore(LocalDateTime.now());
     }
-	
 }
