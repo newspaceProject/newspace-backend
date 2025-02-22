@@ -1,25 +1,14 @@
 package com.lgcns.newspacebackend.domain.user.entity;
 
-import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
-import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.logging.SimpleFormatter;
-
 import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo.AccessTokenInfo;
 import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo.RefreshTokenInfo;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Entity
 @Getter

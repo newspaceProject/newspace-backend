@@ -1,51 +1,32 @@
 package com.lgcns.newspacebackend.domain.user.controller;
 
+import com.lgcns.newspacebackend.domain.user.dto.SignupRequestDto;
+import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
+import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
+import com.lgcns.newspacebackend.domain.user.entity.User;
+import com.lgcns.newspacebackend.domain.user.service.UserService;
+import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
+import com.lgcns.newspacebackend.global.util.FileUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.validation.Valid;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lgcns.newspacebackend.domain.notice.service.NoticeService;
-import com.lgcns.newspacebackend.domain.user.entity.User;
-import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
-import com.lgcns.newspacebackend.global.util.FileUtil;
-import lombok.RequiredArgsConstructor;
-
-import com.lgcns.newspacebackend.domain.user.dto.SignupRequestDto;
-import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
-import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
-import com.lgcns.newspacebackend.domain.user.service.UserService;
-import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/user/")

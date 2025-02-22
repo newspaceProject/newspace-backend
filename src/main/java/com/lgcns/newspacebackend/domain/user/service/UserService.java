@@ -6,22 +6,19 @@ import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
 import com.lgcns.newspacebackend.domain.user.entity.User;
 import com.lgcns.newspacebackend.domain.user.entity.UserRole;
 import com.lgcns.newspacebackend.domain.user.repository.UserRepository;
+import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
-
-import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo;
 
 @Slf4j
 @Service
