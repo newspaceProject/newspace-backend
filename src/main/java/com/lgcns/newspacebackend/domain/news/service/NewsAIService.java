@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lgcns.newspacebackend.domain.news.dto.NewsResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,15 +15,15 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Service
-public class NewsService {
+public class NewsAIService {
     private final ChatClient chatClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public NewsService(ChatClient chatClient) {
+    public NewsAIService(ChatClient chatClient) {
         this.chatClient = chatClient;
     }
 
-    public List<NewsResponseDto> getPastNews(String category) {
+    public List<NewsResponseDto> getPastNews(String keyword) {
         try {
             // 오늘 날짜 가져오기
             String today = LocalDate.now().toString();
@@ -40,7 +38,7 @@ public class NewsService {
                                     "Ensure the response is a strict JSON array in the following format: " +
                                     "[{\"title\":\"News title\",\"content\":\"News summary\",\"date\":\"YYYY-MM-DD\",\"source\":\"News source\",\"link\":\"URL\"}]. " +
                                     "Translate all content into Korean.",
-                            formattedDate, category
+                            formattedDate, keyword
                     ))
                     .call()
                     .content();
