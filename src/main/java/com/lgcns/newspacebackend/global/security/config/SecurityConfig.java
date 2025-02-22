@@ -13,7 +13,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (테스트용)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/news").permitAll() // 인증 없이 허용
+                        .requestMatchers("/api/news/**").permitAll() // 인증 없이 허용
+                        .requestMatchers("/api/user/**").permitAll() // 인증 없이 허용
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // 세션 사용 X
