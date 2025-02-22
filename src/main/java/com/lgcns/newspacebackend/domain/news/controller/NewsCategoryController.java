@@ -19,25 +19,20 @@ public class NewsCategoryController {
     // 카테고리 목록 조회
     @GetMapping
     public ResponseEntity<List<NewsCategoryResponseDto>> getNewsCategories() {
-        List<NewsCategoryResponseDto> categoryList = newsCategoryService.getNewsCategories();
-
-        return ResponseEntity.ok(categoryList);
+        return ResponseEntity.ok(newsCategoryService.getNewsCategories());
     }
 
     // 카테고리 등록
     @PostMapping
     public ResponseEntity<NewsCategoryResponseDto> createNewsCategory(@RequestBody NewsCategoryRequestDto requestDto) {
-        NewsCategoryResponseDto responseDto = newsCategoryService.createNewsCategory(requestDto);
-
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(newsCategoryService.createNewsCategory(requestDto));
     }
 
     // 카테고리 수정
     @PutMapping("/{categoryId}")
     public ResponseEntity<NewsCategoryResponseDto> updateNewsCategory(@PathVariable Long categoryId,
                                                                       @RequestBody NewsCategoryRequestDto requestDto) {
-        NewsCategoryResponseDto responseDto = newsCategoryService.updateNewsCategory(categoryId, requestDto);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(newsCategoryService.updateNewsCategory(categoryId, requestDto));
     }
 
     // 카테고리 삭제
