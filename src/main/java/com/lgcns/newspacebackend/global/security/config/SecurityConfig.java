@@ -89,7 +89,7 @@ public class SecurityConfig{
         
         // CORS 설정
 //        http.cors(Customizer.withDefaults());
-
+      
         return http.build();
     }
 }
