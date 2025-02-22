@@ -1,5 +1,6 @@
 package com.lgcns.newspacebackend.domain.user.entity;
 
+import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "username", unique = true , nullable = false)
@@ -27,12 +28,16 @@ public class User {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "nickname", nullable = false)
+    private String nickname;
+
     @Column(name = "birth", nullable = false)
     private String birth;
 
-    @Column(name = "profile_image", nullable = false)
+    @Column(name = "profile_image")
     private String profileImage;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false)
     private UserRole userRole;
 
@@ -43,4 +48,13 @@ public class User {
     @Column(length = 250)
     private String refreshToken;
     private LocalDateTime refreshTokenExpirationTime;
+
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }
