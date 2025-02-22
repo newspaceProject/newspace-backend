@@ -29,21 +29,22 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig{
 
 
-    private UserDetailsServiceImpl userDetailsService;
-    private JwtTokenUtil jwtTokenUtil;
-    private AuthenticationConfiguration authenticationConfiguration;
-    private UserRepository userRepository;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final UserRepository userRepository;
     // 만들어야함
-    private UserService userService;
+    private final UserService userService;
 
-    // 인증 매니저
-    @Bean
-    BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    // 인증 매니저
+//    @Bean
+//    BCryptPasswordEncoder bCryptPasswordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
     
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -75,7 +76,7 @@ public class SecurityConfig{
                 .requestMatchers("/api/user/**").permitAll() // 인증 없이 허용
                 .requestMatchers("/api/**").permitAll() // 인증 없이 허용                
 //                .requestMatchers("/api/notice/**").hasRole("ADMIN") // ADMIN만 접근 가능
-                .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
+                .anyRequest().permitAll() // 그 외 모든 요청은 인증 필요
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 X
             .formLogin(form -> form.disable()) // 폼 로그인 비활성화
