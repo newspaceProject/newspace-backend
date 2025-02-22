@@ -62,6 +62,10 @@ public class User {
     private String refreshToken;
     private Date refreshTokenExpirationTime;
 
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+    
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
