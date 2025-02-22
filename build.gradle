@@ -34,6 +34,9 @@ dependencyManagement {
 }
 
 dependencies {
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     // jpa
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
@@ -58,11 +61,7 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.6'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.6'
 
-    // Jsoup
-    implementation 'org.jsoup:jsoup:1.17.2'
-
     // Spring AI
-
     implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
 }
 
