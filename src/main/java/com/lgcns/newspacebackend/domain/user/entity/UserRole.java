@@ -1,13 +1,15 @@
 package com.lgcns.newspacebackend.domain.user.entity;
 
-public enum UserRole{
-    USER,
-    ADMIN
+import org.springframework.security.core.GrantedAuthority;
 
+public enum UserRole{
+	USER,
+	ADMIN
+	
 //    USER(Authority.USER),s
 //    ADMIN(Authority.ADMIN);
-//
-//    private final String authority;
+//	
+//	private final String authority;
 //
 //    UserRole(String authority) {
 //        this.authority = authority;
