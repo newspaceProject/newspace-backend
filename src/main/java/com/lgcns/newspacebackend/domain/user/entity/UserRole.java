@@ -1,13 +1,16 @@
 package com.lgcns.newspacebackend.domain.user.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum UserRole{
     USER,
     ADMIN
-
+	
 //    USER(Authority.USER),s
 //    ADMIN(Authority.ADMIN);
-//
-//    private final String authority;
+//	
+//	private final String authority;
 //
 //    UserRole(String authority) {
 //        this.authority = authority;

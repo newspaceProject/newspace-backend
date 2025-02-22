@@ -1,12 +1,25 @@
 package com.lgcns.newspacebackend.domain.user.entity;
 
+import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.logging.SimpleFormatter;
+
+import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo.AccessTokenInfo;
+import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo.RefreshTokenInfo;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,7 +28,7 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "username", unique = true , nullable = false)
@@ -27,20 +40,43 @@ public class User {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "nickname", nullable = false)
+    private String nickname;
+
     @Column(name = "birth", nullable = false)
     private String birth;
 
-    @Column(name = "profile_image", nullable = false)
+    @Column(name = "profile_image")
     private String profileImage;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false)
     private UserRole userRole;
 
     @Column(length = 250)
     private String accessToken;
-    private LocalDateTime accessTokenExpirationTime;
+
+    private Date accessTokenExpirationTime;
 
     @Column(length = 250)
     private String refreshToken;
-    private LocalDateTime refreshTokenExpirationTime;
+    private Date refreshTokenExpirationTime;
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
+    
+	public void updateAccessTokenInfo(AccessTokenInfo accessTokenInfo) {
+		this.accessToken = accessTokenInfo.getAccessToken();
+		this.accessTokenExpirationTime = accessTokenInfo.getAccessTokenExpireTime();
+	}
+
+	public void updateRefreshTokenInfo(RefreshTokenInfo refreshTokenInfo) {
+		this.refreshToken = refreshTokenInfo.getRefreshToken();
+		this.refreshTokenExpirationTime = refreshTokenInfo.getRefreshTokenExpireTime();
+	}
 }

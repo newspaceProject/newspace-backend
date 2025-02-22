@@ -34,9 +34,10 @@ public class NewsAIService {
                     .user(String.format(
                             "Provide a list of 10 famous news articles from previous years that happened on '%s' worldwide, " +
                                     "focusing on the topic '%s'. The list should be sorted by popularity, not by date. " +
-                                    "Each article must include the title, summary, date (YYYY-MM-DD format), source, and a valid URL link to the full article. " +
+                                    "Each article must include an incrementing 'id' field starting from 1, " +
+                                    "title, summary, date (YYYY-MM-DD format), source, and a valid URL link to the full article. " +
                                     "Ensure the response is a strict JSON array in the following format: " +
-                                    "[{\"title\":\"News title\",\"content\":\"News summary\",\"date\":\"YYYY-MM-DD\",\"source\":\"News source\",\"link\":\"URL\"}]. " +
+                                    "[{\"id\":1, \"title\":\"News title\",\"content\":\"News summary\",\"date\":\"YYYY-MM-DD\",\"source\":\"News source\",\"link\":\"URL\"}]. " +
                                     "Translate all content into Korean.",
                             formattedDate, keyword
                     ))

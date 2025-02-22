@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class NewsResponseDto {
+    private Long id;
     private String title;
     private String content;
     private String date;
