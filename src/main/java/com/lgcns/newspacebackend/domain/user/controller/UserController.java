@@ -1,11 +1,11 @@
 package com.lgcns.newspacebackend.domain.user.controller;
 
-
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,140 +50,179 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/user/")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController
+{
 
 	private final UserService userService;
-  
+
 	@Value("${spring.servlet.multipart.location}")
 	private String uploadPath;
-	
+
 	@Autowired
 	private FileUtil fileUtil;
-	
-	//프로필 사진 등록
-    @PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	private ResponseEntity<Object> createProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails, MultipartHttpServletRequest request) throws Exception
-	{
-        String username = userDetails.getName();
-        User user = this.service.getUser(username);
-        String imagePath = fileUtil.getFilePath(request);
 
-        Map<String, String> result = new HashMap<>();
-        try {
-        	//TODO 서비스에서 user 에 imagePath 저장
-            result.put("message", "프로필 이미지 저장 성공");
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-        } catch(Exception e) {
-            result.put("message", "프로필 이미지 저장 실패");
-            result.put("description", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);            
-        }
-	}
-    
-    //프로필 사진 수정
-    @PutMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	private ResponseEntity<Object> updateProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails, MultipartHttpServletRequest request) throws Exception
+	// 프로필 사진 등록
+	@PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	private ResponseEntity<Object> createProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails,
+			MultipartHttpServletRequest request) throws Exception
 	{
-    	String username = userDetails.getName();
-        User user = this.service.getUser(username);
-        String imagePath = fileUtil.getFilePath(request);
-        Map<String, String> result = new HashMap<>();
-        try {
-        	//TODO 서비스에서 user 에 imagePath 저장
-            result.put("message", "프로필 이미지 수정 성공");
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-        } catch(Exception e) {
-            result.put("message", "프로필 이미지 수정 실패");
-            result.put("description", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);            
-        }
+		String username = userDetails.getUsername();
+		User user = this.userService.findUserByUsername(username).orElseThrow(() ->
+		{
+			return new Exception("유저가 존재하지 않습니다!");
+		});
+		Map<String, String> result = new HashMap<>();
+		try
+		{
+			// 서비스에서 user 에 imagePath 저장
+			this.userService.updateProfileImage(user, fileUtil.getAbsoluteFilePath(request));
+			result.put("message", "프로필 이미지 저장 성공");
+			return ResponseEntity.status(HttpStatus.CREATED).body(result);
+		}
+		catch(Exception e)
+		{
+			result.put("message", "프로필 이미지 저장 실패");
+			result.put("description", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+		}
 	}
-    
-    //프로필 사진 삭제
-    @DeleteMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+	// 프로필 사진 수정
+	@PutMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	private ResponseEntity<Object> updateProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails,
+			MultipartHttpServletRequest request) throws Exception
+	{
+		String username = userDetails.getUsername();
+		User user = this.userService.findUserByUsername(username).orElseThrow(() ->
+		{
+			return new Exception("유저가 존재하지 않습니다!");
+		});
+		Map<String, String> result = new HashMap<>();
+		try
+		{
+			// 서비스에서 user 에 imagePath 저장
+			this.userService.updateProfileImage(user, fileUtil.getAbsoluteFilePath(request));
+			result.put("message", "프로필 이미지 수정 성공");
+			return ResponseEntity.status(HttpStatus.CREATED).body(result);
+		}
+		catch(Exception e)
+		{
+			result.put("message", "프로필 이미지 수정 실패");
+			result.put("description", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+		}
+	}
+
+	// 프로필 사진 삭제
+	@DeleteMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private ResponseEntity<Object> deleteProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
+			throws Exception
 	{
-    	String username = userDetails.getName();
-        User user = this.service.getUser(username);
-        Map<String, String> result = new HashMap<>();
-        try {
-        	//TODO 서비스에서 user 에 imagePath 를 기본 이미지로 변경 해야함
-            result.put("message", "프로필 이미지 삭제 성공");
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-        } catch(Exception e) {
-            result.put("message", "프로필 이미지 삭제 실패");
-            result.put("description", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);            
-        }
+		String username = userDetails.getUsername();
+		User user = this.userService.findUserByUsername(username).orElseThrow(() ->
+		{
+			return new Exception("유저가 존재하지 않습니다!");
+		});
+		Map<String, String> result = new HashMap<>();
+		try
+		{
+			// user 에 imagePath 를 기본 이미지로 변경
+			this.userService.updateProfileImage(user, "default");
+			result.put("message", "프로필 이미지 삭제 성공");
+			return ResponseEntity.status(HttpStatus.CREATED).body(result);
+		}
+		catch(Exception e)
+		{
+			result.put("message", "프로필 이미지 삭제 실패");
+			result.put("description", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+		}
 	}
-	
-    //프로필 사진 다운로드
-    @GetMapping("/profile")
-    public ResponseEntity<Resource> getProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails) throws MalformedURLException {
 
-    	String username = userDetails.getName();
-        User user = this.service.getUser(username);
+	// 프로필 사진 다운로드
+	@GetMapping("/profile")
+	public ResponseEntity<Resource> getProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
+			throws Exception
+	{
+		String username = userDetails.getUsername();
+		User user = this.userService.findUserByUsername(username).orElseThrow(() ->
+		{
+			return new Exception("유저가 존재하지 않습니다!");
+		});
 		String profileImage = user.getProfileImage();
-        Path imagePath = Paths.get(profileImage);
-        
-        Resource resource = new UrlResource(imagePath.toUri());
+		Path imagePath = Paths.get(profileImage);
+		Resource resource = new UrlResource(imagePath.toUri());
 
-        if (resource.exists() || resource.isReadable()) {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)  // 이미지 형식에 맞게 수정
-                    //.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"profile.jpg\"") // 다운로드의 경우
-                    .body(resource);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
-    //이미지 탐색 kudong.kr:55021/api/user/image/0/default_profile.jpg
-    //이미지 예시 
-    @GetMapping("/image/{day}/{filename}")
-    public ResponseEntity<Resource> getImage(@PathVariable("day") String day, @PathVariable("filename") String filename) throws MalformedURLException {
-        Path imagePath = Paths.get(uploadPath+ day).resolve(filename);
-        Resource resource = new UrlResource(imagePath.toUri());
-        if (resource.exists() || resource.isReadable()) {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)  // 이미지 형식에 맞게 수정
-                    .body(resource);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+		if(resource.exists() || resource.isReadable())
+		{
+			return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG) // 이미지 형식에 맞게 수정
+					// .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;
+					// filename=\"profile.jpg\"") // 다운로드의 경우
+					.body(resource);
+		}
+		else
+		{
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-    // 회원가입
-    @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto,
-                                    BindingResult bindingResult) throws MethodArgumentNotValidException {
-        userService.signup(requestDto, bindingResult);
-        return ResponseEntity.ok("회원가입 성공");
-    }
+	// 이미지 탐색 kudong.kr:55021/api/user/image/0/default_profile.jpg
+	// 이미지 예시
+	@GetMapping("/image/{day}/{filename}")
+	public ResponseEntity<Resource> getImage(@PathVariable("day") String day, @PathVariable("filename") String filename)
+			throws MalformedURLException
+	{
+		Path imagePath = Paths.get(uploadPath+day).resolve(filename);
+		Resource resource = new UrlResource(imagePath.toUri());
+		if(resource.exists() || resource.isReadable())
+		{
+			return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG) // 이미지 형식에 맞게 수정
+					.body(resource);
+		}
+		else
+		{
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-    // 아이디 중복 체크
-    @GetMapping("/check-id")
-    public ResponseEntity<?> checkId(@RequestParam("username") String username) {
-        boolean isValid = userService.checkId(username);
+	// 회원가입
+	@PostMapping("/signup")
+	public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult)
+			throws MethodArgumentNotValidException
+	{
+		userService.signup(requestDto, bindingResult);
+		return ResponseEntity.ok("회원가입 성공");
+	}
 
-        if (isValid) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+	// 아이디 중복 체크
+	@GetMapping("/check-id")
+	public ResponseEntity<?> checkId(@RequestParam("username") String username)
+	{
+		boolean isValid = userService.checkId(username);
 
-    // 회원정보 조회
-    @GetMapping("/info")
-    public ResponseEntity<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok(userService.getUserInfo(userDetails.getUser().getId()));
-    }
+		if(isValid)
+		{
+			return ResponseEntity.ok().build();
+		}
+		else
+		{
+			return ResponseEntity.badRequest().build();
+		}
+	}
 
-    // 회원정보 수정
-    @PatchMapping("/info")
-    public ResponseEntity<?> updateUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                            @RequestBody UserInfoRequestDto requestDto) {
-        userService.updateUserInfo(userDetails.getUser().getId(), requestDto);
-        return ResponseEntity.ok().build();
-    }
+	// 회원정보 조회
+	@GetMapping("/info")
+	public ResponseEntity<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails)
+	{
+		return ResponseEntity.ok(userService.getUserInfo(userDetails.getUser().getId()));
+	}
+
+	// 회원정보 수정
+	@PatchMapping("/info")
+	public ResponseEntity<?> updateUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails,
+			@RequestBody UserInfoRequestDto requestDto)
+	{
+		userService.updateUserInfo(userDetails.getUser().getId(), requestDto);
+		return ResponseEntity.ok().build();
+	}
 }
