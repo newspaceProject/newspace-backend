@@ -210,7 +210,7 @@ public class UserService
 		{
 			String relativePath = "";
 			if(!absoluteFilePath.equals(""))
-				relativePath = "/api/user/image" + absoluteFilePath
+				relativePath = absoluteFilePath
 				.substring(absoluteFilePath.indexOf("/uploads") + "/uploads".length());
 			// user에 ProfileImage 경로 저장
 			user.updateProfileImage(relativePath);
@@ -227,11 +227,11 @@ public class UserService
 		}
 	}
 
-	public Resource getImageResource(UserDetailsImpl userDetails) throws Exception
+	public Resource getImageResource(String uploadDir, UserDetailsImpl userDetails) throws Exception
 	{
 		User user = userDetails.getUser();
 		String profileImage = user.getProfileImage();
-		Path imagePath = Paths.get(profileImage);
+		Path imagePath = Paths.get(uploadDir + profileImage);
 		Resource resource = new UrlResource(imagePath.toUri());
 		return resource;
 	}

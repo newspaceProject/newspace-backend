@@ -104,7 +104,7 @@ public class UserController
 	public ResponseEntity<Resource> getProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
 	{
-		Resource resource = this.userService.getImageResource(userDetails);
+		Resource resource = this.userService.getImageResource(this.uploadPath,userDetails);
 		if(resource.exists() || resource.isReadable())
 		{
 			log.info("이미지 파일 => "+resource.getFilename());
