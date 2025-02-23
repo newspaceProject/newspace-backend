@@ -40,9 +40,8 @@ public class UserService
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
-	
-    
+	private final JwtTokenUtil jwtTokenUtil;
+
 	// 회원가입
 	@Transactional
 	public void signup(SignupRequestDto requestDto, BindingResult bindingResult) throws MethodArgumentNotValidException
@@ -210,19 +209,18 @@ public class UserService
 		{
 			return new Exception("유저가 존재하지 않습니다!");
 		});
-		
-		//null값일시 기본 프로필 이미지로 변경
+
+		// null값일시 기본 프로필 이미지로 변경
 		if(absoluteFilePath == null)
 		{
 			absoluteFilePath = "https://upload.wikimedia.org/wikipedia/commons/"
-					+ "thumb/6/6e/Breezeicons-actions-22-im-user.svg/"
-					+ "1200px-Breezeicons-actions-22-im-user.svg.png";
+					+"thumb/6/6e/Breezeicons-actions-22-im-user.svg/"+"1200px-Breezeicons-actions-22-im-user.svg.png";
 		}
-		
+
 		Map<String, String> result = new HashMap<>();
 		try
 		{
-			//user에 ProfileImage 경로 저장
+			// user에 ProfileImage 경로 저장
 			user.updateProfileImage(absoluteFilePath);
 			userRepository.save(user);
 			result.put("message", "프로필 이미지 수정 성공");
@@ -235,22 +233,18 @@ public class UserService
 			return result;
 		}
 	}
-	
+
 	public Resource getImageResource(UserDetailsImpl userDetails) throws Exception
 	{
-		String username = userDetails.getUsername();
-		User user = this.findUserByUsername(username).orElseThrow(() ->
-		{
-			return new Exception("유저가 존재하지 않습니다!");
-		});
+		User user = userDetails.getUser();
 		String profileImage = user.getProfileImage();
 		Path imagePath = Paths.get(profileImage);
 		Resource resource = new UrlResource(imagePath.toUri());
 		return resource;
 	}
 
-
-	public void logoutUser(HttpServletResponse response,User user) {
+	public void logoutUser(HttpServletResponse response, User user)
+	{
 		// 쿠키에서 토큰을 삭제
 		Cookie cookie = jwtTokenUtil.removeTokenCookie();
 		// 빈 쿠키를 응답으로 반환하기
@@ -261,16 +255,16 @@ public class UserService
 		user.setTokenExpirationTime(LocalDateTime.now());
 		userRepository.save(user);
 	}
-	
+
 	// 회원탈퇴
-	public void deleteUser(HttpServletResponse response, User user) throws Exception {
+	public void deleteUser(HttpServletResponse response, User user) throws Exception
+	{
 		// 현재 userDetails에 인증된 userId로
 		// userService에서 구현된 회원탈퇴 메서드를 수행한다.
 		// 일반적으로 쿠키를 먼저 삭제하고, 유저 db를 삭제해야함
 		// db가 먼저 삭제될시 쿠키를 삭제할수 없다.
 		logoutUser(response, user);
-        userRepository.deleteById(user.getId()); // 리포지토리에서 사용자 삭제
+		userRepository.deleteById(user.getId()); // 리포지토리에서 사용자 삭제
 	}
-
 
 }
