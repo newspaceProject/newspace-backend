@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT u.refreshTokenExpirationTime FROM User u WHERE u.refreshToken = :refreshToken")
 	Date findRefreshTokenExpirationTimeByRefreshToken(@Param("refreshToken") String refreshToken);
+
+	
 }

@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Entity
@@ -44,12 +47,24 @@ public class User {
 
     @Column(length = 250)
     private String accessToken;
-
     private Date accessTokenExpirationTime;
 
     @Column(length = 250)
     private String refreshToken;
     private Date refreshTokenExpirationTime;
+
+	public void setTokenExpirationTime(LocalDateTime now) {
+        // LocalDateTime을 ZonedDateTime으로 변환
+        ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
+
+        // ZonedDateTime을 Date로 변환
+        this.accessTokenExpirationTime = Date.from(zonedDateTime.toInstant());
+        this.refreshTokenExpirationTime = Date.from(zonedDateTime.toInstant());
+	};
+    
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	};
 
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
@@ -72,4 +87,5 @@ public class User {
 		this.refreshToken = refreshTokenInfo.getRefreshToken();
 		this.refreshTokenExpirationTime = refreshTokenInfo.getRefreshTokenExpireTime();
 	}
+
 }
