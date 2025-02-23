@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NewsCategoryRequestDto {
     private String name;
+    private String icon;
 }

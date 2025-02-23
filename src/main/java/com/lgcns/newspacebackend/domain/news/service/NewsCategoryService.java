@@ -25,6 +25,7 @@ public class NewsCategoryService {
 
         NewsCategory category = NewsCategory.builder()
                 .name(requestDto.getName())
+                .icon(requestDto.getIcon())
                 .build();
         newsCategoryRepository.save(category);
 
@@ -48,6 +49,7 @@ public class NewsCategoryService {
         NewsCategory category = getNewsCategoryForRepository(categoryId);
 
         category.setName(requestDto.getName());
+        category.setIcon(requestDto.getIcon());
         newsCategoryRepository.save(category);
 
         return new NewsCategoryResponseDto(category);
