@@ -1,5 +1,22 @@
 package com.lgcns.newspacebackend.domain.user.service;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import com.lgcns.newspacebackend.domain.user.dto.SignupRequestDto;
 import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
 import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
@@ -14,16 +31,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -196,11 +203,52 @@ public class UserService
 		return this.userRepository.findByUsername(username);
 	}
 
-	public void updateProfileImage(User user, String absoluteFilePath)
+	public Map<String, String> updateProfileImage(UserDetailsImpl userDetails, String absoluteFilePath) throws Exception
 	{
-		user.updateProfileImage(absoluteFilePath);
-		userRepository.save(user);
+		String username = userDetails.getUsername();
+		User user = this.findUserByUsername(username).orElseThrow(() ->
+		{
+			return new Exception("유저가 존재하지 않습니다!");
+		});
+		
+		//null값일시 기본 프로필 이미지로 변경
+		if(absoluteFilePath == null)
+		{
+			absoluteFilePath = "https://upload.wikimedia.org/wikipedia/commons/"
+					+ "thumb/6/6e/Breezeicons-actions-22-im-user.svg/"
+					+ "1200px-Breezeicons-actions-22-im-user.svg.png";
+		}
+		
+		Map<String, String> result = new HashMap<>();
+		try
+		{
+			//user에 ProfileImage 경로 저장
+			user.updateProfileImage(absoluteFilePath);
+			userRepository.save(user);
+			result.put("message", "프로필 이미지 수정 성공");
+			return result;
+		}
+		catch(Exception e)
+		{
+			result.put("message", "프로필 이미지 수정 실패");
+			result.put("description", e.getMessage());
+			return result;
+		}
 	}
+	
+	public Resource getImageResource(UserDetailsImpl userDetails) throws Exception
+	{
+		String username = userDetails.getUsername();
+		User user = this.findUserByUsername(username).orElseThrow(() ->
+		{
+			return new Exception("유저가 존재하지 않습니다!");
+		});
+		String profileImage = user.getProfileImage();
+		Path imagePath = Paths.get(profileImage);
+		Resource resource = new UrlResource(imagePath.toUri());
+		return resource;
+	}
+
 
 	public void logoutUser(HttpServletResponse response,User user) {
 		// 쿠키에서 토큰을 삭제
@@ -223,5 +271,6 @@ public class UserService
 		logoutUser(response, user);
         userRepository.deleteById(user.getId()); // 리포지토리에서 사용자 삭제
 	}
+
 
 }
