@@ -96,10 +96,10 @@ public class UserController
 	private ResponseEntity<Object> deleteProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
 	{
-		return ResponseEntity.status(HttpStatus.OK).body(this.userService.updateProfileImage(userDetails, null));
+		return ResponseEntity.status(HttpStatus.OK).body(this.userService.updateProfileImage(userDetails, ""));
 	}
 
-	// 프로필 사진 가져오기
+	// 프로필 사진 다운로드
 	@GetMapping("/profile")
 	public ResponseEntity<Resource> getProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
@@ -119,7 +119,7 @@ public class UserController
 			}
 
 			return ResponseEntity.ok().contentType(mediaType) // 이미지 형식에 맞게 수정
-					.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\""+fileName+"\"").body(resource);
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+fileName+"\"").body(resource);
 		}
 		else return ResponseEntity.notFound().build();
 	}

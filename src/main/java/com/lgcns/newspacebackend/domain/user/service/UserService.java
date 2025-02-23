@@ -204,26 +204,19 @@ public class UserService
 
 	public Map<String, String> updateProfileImage(UserDetailsImpl userDetails, String absoluteFilePath) throws Exception
 	{
-		String username = userDetails.getUsername();
-		User user = this.findUserByUsername(username).orElseThrow(() ->
-		{
-			return new Exception("유저가 존재하지 않습니다!");
-		});
-
-		// null값일시 기본 프로필 이미지로 변경
-		if(absoluteFilePath == null)
-		{
-			absoluteFilePath = "https://upload.wikimedia.org/wikipedia/commons/"
-					+"thumb/6/6e/Breezeicons-actions-22-im-user.svg/"+"1200px-Breezeicons-actions-22-im-user.svg.png";
-		}
-
+		User user = userDetails.getUser();
 		Map<String, String> result = new HashMap<>();
 		try
 		{
+			String relativePath = "";
+			if(!absoluteFilePath.equals(""))
+				relativePath = "/api/user/image" + absoluteFilePath
+				.substring(absoluteFilePath.indexOf("/uploads") + "/uploads".length());
 			// user에 ProfileImage 경로 저장
-			user.updateProfileImage(absoluteFilePath);
+			user.updateProfileImage(relativePath);
 			userRepository.save(user);
 			result.put("message", "프로필 이미지 수정 성공");
+			result.put("url", relativePath);
 			return result;
 		}
 		catch(Exception e)
