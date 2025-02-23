@@ -38,7 +38,9 @@ import com.lgcns.newspacebackend.global.util.FileUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/user/")
 @RequiredArgsConstructor
@@ -52,28 +54,31 @@ public class UserController
 
 	@Autowired
 	private FileUtil fileUtil;
-	
+
 	// 로그아웃 기능 -> 쿠키에서 토큰 삭제하기
 	@PostMapping("/logout")
-	public ResponseEntity<String> logout(HttpServletResponse response, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception{
+	public ResponseEntity<String> logout(HttpServletResponse response,
+			@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception
+	{
 		userService.logoutUser(response, userDetails.getUser());
 		return ResponseEntity.ok("로그아웃 완료");
 	}
-	
+
 	// 회원탈퇴 기능
 	@DeleteMapping("/signout")
-	public ResponseEntity<String> deleteUser(HttpServletResponse response, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception{
+	public ResponseEntity<String> deleteUser(HttpServletResponse response,
+			@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception
+	{
 		userService.deleteUser(response, userDetails.getUser());
 		return ResponseEntity.ok("유저 삭제 완료");
 	}
-	
+
 	// 프로필 사진 등록
 	@PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private ResponseEntity<Object> createProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails,
 			MultipartHttpServletRequest request) throws Exception
 	{
-		return ResponseEntity
-				.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		return ResponseEntity.status(HttpStatus.OK)
 				.body(this.userService.updateProfileImage(userDetails, fileUtil.getAbsoluteFilePath(request)));
 	}
 
@@ -82,8 +87,7 @@ public class UserController
 	private ResponseEntity<Object> updateProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails,
 			MultipartHttpServletRequest request) throws Exception
 	{
-		return ResponseEntity
-				.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		return ResponseEntity.status(HttpStatus.OK)
 				.body(this.userService.updateProfileImage(userDetails, fileUtil.getAbsoluteFilePath(request)));
 	}
 
@@ -92,12 +96,10 @@ public class UserController
 	private ResponseEntity<Object> deleteProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
 	{
-		return ResponseEntity
-				.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(this.userService.updateProfileImage(userDetails, null));
+		return ResponseEntity.status(HttpStatus.OK).body(this.userService.updateProfileImage(userDetails, null));
 	}
 
-	// 프로필 사진 다운로드
+	// 프로필 사진 가져오기
 	@GetMapping("/profile")
 	public ResponseEntity<Resource> getProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
@@ -105,28 +107,46 @@ public class UserController
 		Resource resource = this.userService.getImageResource(userDetails);
 		if(resource.exists() || resource.isReadable())
 		{
-			return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG) // 이미지 형식에 맞게 수정
-					 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"profile.jpg\"") // 다운로드의 경우
-					.body(resource);
+			log.info("이미지 파일 => "+resource.getFilename());
+			String imageType = this.fileUtil.getFileExtension(resource.getFilename());
+			String fileName = "profile.jpg";
+			MediaType mediaType = MediaType.IMAGE_JPEG;
+
+			if("png".equalsIgnoreCase(imageType))
+			{
+				mediaType = MediaType.IMAGE_PNG;
+				fileName = "profile.png";
+			}
+
+			return ResponseEntity.ok().contentType(mediaType) // 이미지 형식에 맞게 수정
+					.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\""+fileName+"\"").body(resource);
 		}
-		else
-			return ResponseEntity.notFound().build();
+		else return ResponseEntity.notFound().build();
 	}
 
-	// 이미지 경로로 검색
+	// 경로로 이미지 검색
 	@GetMapping("/image/{day}/{filename}")
 	public ResponseEntity<Resource> getImage(@PathVariable("day") String day, @PathVariable("filename") String filename)
 			throws MalformedURLException
 	{
-		Path imagePath = Paths.get(uploadPath + day).resolve(filename);
+		Path imagePath = Paths.get(uploadPath+day).resolve(filename);
 		Resource resource = new UrlResource(imagePath.toUri());
 		if(resource.exists() || resource.isReadable())
 		{
-			return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG) // 이미지 형식에 맞게 수정
-					.body(resource);
+			String imageType = this.fileUtil.getFileExtension(imagePath.toUri().toString());
+			String fileName = "profile.jpg";
+			MediaType mediaType = MediaType.IMAGE_JPEG;
+
+			if("png".equalsIgnoreCase(imageType))
+			{
+				mediaType = MediaType.IMAGE_PNG;
+				fileName = "profile.png";
+			}
+
+			return ResponseEntity.ok().contentType(mediaType) // 이미지 형식에 맞게 수정
+					.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\""+fileName+"\"").body(resource);
 		}
-		else
-			return ResponseEntity.notFound().build();
+		else return ResponseEntity.notFound().build();
 	}
 
 	// 회원가입
@@ -153,6 +173,7 @@ public class UserController
 			return ResponseEntity.badRequest().build();
 		}
 	}
+
 	// 회원정보 조회
 	@GetMapping("/info")
 	public ResponseEntity<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails)
