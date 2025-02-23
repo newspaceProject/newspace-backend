@@ -1,38 +1,43 @@
 package com.lgcns.newspacebackend.domain.user.controller;
 
-import com.lgcns.newspacebackend.domain.user.dto.SignupRequestDto;
-import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
-import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
-import com.lgcns.newspacebackend.domain.user.entity.User;
-import com.lgcns.newspacebackend.domain.user.service.UserService;
-import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
-import com.lgcns.newspacebackend.global.security.jwt.JwtTokenUtil;
-import com.lgcns.newspacebackend.global.util.FileUtil;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.validation.Valid;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import com.lgcns.newspacebackend.domain.user.dto.SignupRequestDto;
+import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
+import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
+import com.lgcns.newspacebackend.domain.user.service.UserService;
+import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
+import com.lgcns.newspacebackend.global.util.FileUtil;
+
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/user/")
@@ -67,25 +72,9 @@ public class UserController
 	private ResponseEntity<Object> createProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails,
 			MultipartHttpServletRequest request) throws Exception
 	{
-		String username = userDetails.getUsername();
-		User user = this.userService.findUserByUsername(username).orElseThrow(() ->
-		{
-			return new Exception("유저가 존재하지 않습니다!");
-		});
-		Map<String, String> result = new HashMap<>();
-		try
-		{
-			// 서비스에서 user 에 imagePath 저장
-			this.userService.updateProfileImage(user, fileUtil.getAbsoluteFilePath(request));
-			result.put("message", "프로필 이미지 저장 성공");
-			return ResponseEntity.status(HttpStatus.CREATED).body(result);
-		}
-		catch(Exception e)
-		{
-			result.put("message", "프로필 이미지 저장 실패");
-			result.put("description", e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-		}
+		return ResponseEntity
+				.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(this.userService.updateProfileImage(userDetails, fileUtil.getAbsoluteFilePath(request)));
 	}
 
 	// 프로필 사진 수정
@@ -93,25 +82,9 @@ public class UserController
 	private ResponseEntity<Object> updateProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails,
 			MultipartHttpServletRequest request) throws Exception
 	{
-		String username = userDetails.getUsername();
-		User user = this.userService.findUserByUsername(username).orElseThrow(() ->
-		{
-			return new Exception("유저가 존재하지 않습니다!");
-		});
-		Map<String, String> result = new HashMap<>();
-		try
-		{
-			// 서비스에서 user 에 imagePath 저장
-			this.userService.updateProfileImage(user, fileUtil.getAbsoluteFilePath(request));
-			result.put("message", "프로필 이미지 수정 성공");
-			return ResponseEntity.status(HttpStatus.CREATED).body(result);
-		}
-		catch(Exception e)
-		{
-			result.put("message", "프로필 이미지 수정 실패");
-			result.put("description", e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-		}
+		return ResponseEntity
+				.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(this.userService.updateProfileImage(userDetails, fileUtil.getAbsoluteFilePath(request)));
 	}
 
 	// 프로필 사진 삭제
@@ -119,25 +92,9 @@ public class UserController
 	private ResponseEntity<Object> deleteProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
 	{
-		String username = userDetails.getUsername();
-		User user = this.userService.findUserByUsername(username).orElseThrow(() ->
-		{
-			return new Exception("유저가 존재하지 않습니다!");
-		});
-		Map<String, String> result = new HashMap<>();
-		try
-		{
-			// user 에 imagePath 를 기본 이미지로 변경
-			this.userService.updateProfileImage(user, "default");
-			result.put("message", "프로필 이미지 삭제 성공");
-			return ResponseEntity.status(HttpStatus.CREATED).body(result);
-		}
-		catch(Exception e)
-		{
-			result.put("message", "프로필 이미지 삭제 실패");
-			result.put("description", e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-		}
+		return ResponseEntity
+				.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(this.userService.updateProfileImage(userDetails, null));
 	}
 
 	// 프로필 사진 다운로드
@@ -145,35 +102,23 @@ public class UserController
 	public ResponseEntity<Resource> getProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
 	{
-		String username = userDetails.getUsername();
-		User user = this.userService.findUserByUsername(username).orElseThrow(() ->
-		{
-			return new Exception("유저가 존재하지 않습니다!");
-		});
-		String profileImage = user.getProfileImage();
-		Path imagePath = Paths.get(profileImage);
-		Resource resource = new UrlResource(imagePath.toUri());
-
+		Resource resource = this.userService.getImageResource(userDetails);
 		if(resource.exists() || resource.isReadable())
 		{
 			return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG) // 이미지 형식에 맞게 수정
-					// .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;
-					// filename=\"profile.jpg\"") // 다운로드의 경우
+					 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"profile.jpg\"") // 다운로드의 경우
 					.body(resource);
 		}
 		else
-		{
 			return ResponseEntity.notFound().build();
-		}
 	}
 
-	// 이미지 탐색 kudong.kr:55021/api/user/image/0/default_profile.jpg
-	// 이미지 예시
+	// 이미지 경로로 검색
 	@GetMapping("/image/{day}/{filename}")
 	public ResponseEntity<Resource> getImage(@PathVariable("day") String day, @PathVariable("filename") String filename)
 			throws MalformedURLException
 	{
-		Path imagePath = Paths.get(uploadPath+day).resolve(filename);
+		Path imagePath = Paths.get(uploadPath + day).resolve(filename);
 		Resource resource = new UrlResource(imagePath.toUri());
 		if(resource.exists() || resource.isReadable())
 		{
@@ -181,9 +126,7 @@ public class UserController
 					.body(resource);
 		}
 		else
-		{
 			return ResponseEntity.notFound().build();
-		}
 	}
 
 	// 회원가입
