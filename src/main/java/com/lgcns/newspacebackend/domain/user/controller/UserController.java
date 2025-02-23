@@ -6,7 +6,12 @@ import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
 import com.lgcns.newspacebackend.domain.user.entity.User;
 import com.lgcns.newspacebackend.domain.user.service.UserService;
 import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
+import com.lgcns.newspacebackend.global.security.jwt.JwtTokenUtil;
 import com.lgcns.newspacebackend.global.util.FileUtil;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +20,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,7 +47,21 @@ public class UserController
 
 	@Autowired
 	private FileUtil fileUtil;
-
+	
+	// 로그아웃 기능 -> 쿠키에서 토큰 삭제하기
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout(HttpServletResponse response, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception{
+		userService.logoutUser(response, userDetails.getUser());
+		return ResponseEntity.ok("로그아웃 완료");
+	}
+	
+	// 회원탈퇴 기능
+	@DeleteMapping("/signout")
+	public ResponseEntity<String> deleteUser(HttpServletResponse response, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception{
+		userService.deleteUser(response, userDetails.getUser());
+		return ResponseEntity.ok("유저 삭제 완료");
+	}
+	
 	// 프로필 사진 등록
 	@PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private ResponseEntity<Object> createProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -190,7 +210,6 @@ public class UserController
 			return ResponseEntity.badRequest().build();
 		}
 	}
-
 	// 회원정보 조회
 	@GetMapping("/info")
 	public ResponseEntity<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails)

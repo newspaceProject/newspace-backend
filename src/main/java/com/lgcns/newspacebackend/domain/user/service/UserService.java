@@ -6,7 +6,12 @@ import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
 import com.lgcns.newspacebackend.domain.user.entity.User;
 import com.lgcns.newspacebackend.domain.user.entity.UserRole;
 import com.lgcns.newspacebackend.domain.user.repository.UserRepository;
+import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
 import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo;
+import com.lgcns.newspacebackend.global.security.jwt.JwtTokenUtil;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +33,9 @@ public class UserService
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-
+    private final JwtTokenUtil jwtTokenUtil;
+	
+    
 	// 회원가입
 	@Transactional
 	public void signup(SignupRequestDto requestDto, BindingResult bindingResult) throws MethodArgumentNotValidException
@@ -194,4 +201,27 @@ public class UserService
 		user.updateProfileImage(absoluteFilePath);
 		userRepository.save(user);
 	}
+
+	public void logoutUser(HttpServletResponse response,User user) {
+		// 쿠키에서 토큰을 삭제
+		Cookie cookie = jwtTokenUtil.removeTokenCookie();
+		// 빈 쿠키를 응답으로 반환하기
+		response.addCookie(cookie);
+		// 액세스 토큰 초기화
+		user.setAccessToken("");
+		// 토큰들 만료시키기
+		user.setTokenExpirationTime(LocalDateTime.now());
+		userRepository.save(user);
+	}
+	
+	// 회원탈퇴
+	public void deleteUser(HttpServletResponse response, User user) throws Exception {
+		// 현재 userDetails에 인증된 userId로
+		// userService에서 구현된 회원탈퇴 메서드를 수행한다.
+		// 일반적으로 쿠키를 먼저 삭제하고, 유저 db를 삭제해야함
+		// db가 먼저 삭제될시 쿠키를 삭제할수 없다.
+		logoutUser(response, user);
+        userRepository.deleteById(user.getId()); // 리포지토리에서 사용자 삭제
+	}
+
 }
