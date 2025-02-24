@@ -47,19 +47,23 @@ public class User {
 
     @Column(length = 250)
     private String accessToken;
-    private Date accessTokenExpirationTime;
+//    private Date accessTokenExpirationTime;
+    private LocalDateTime accessTokenExpirationTime;
 
     @Column(length = 250)
     private String refreshToken;
-    private Date refreshTokenExpirationTime;
+//    private Date refreshTokenExpirationTime;
+    private LocalDateTime refreshTokenExpirationTime;
 
 	public void setTokenExpirationTime(LocalDateTime now) {
-        // LocalDateTime을 ZonedDateTime으로 변환
-        ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
-
-        // ZonedDateTime을 Date로 변환
-        this.accessTokenExpirationTime = Date.from(zonedDateTime.toInstant());
-        this.refreshTokenExpirationTime = Date.from(zonedDateTime.toInstant());
+//        // LocalDateTime을 ZonedDateTime으로 변환
+//        ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
+//
+//        // ZonedDateTime을 Date로 변환
+//        this.accessTokenExpirationTime = Date.from(zonedDateTime.toInstant());
+//        this.refreshTokenExpirationTime = Date.from(zonedDateTime.toInstant());
+        this.accessTokenExpirationTime = now;
+        this.refreshTokenExpirationTime = now;
 	};
     
 	public void setAccessToken(String accessToken) {
@@ -80,12 +84,18 @@ public class User {
     
 	public void updateAccessTokenInfo(AccessTokenInfo accessTokenInfo) {
 		this.accessToken = accessTokenInfo.getAccessToken();
-		this.accessTokenExpirationTime = accessTokenInfo.getAccessTokenExpireTime();
+//		this.accessTokenExpirationTime = accessTokenInfo.getAccessTokenExpireTime();
+        this.accessTokenExpirationTime = convertToLocalDateTime(accessTokenInfo.getAccessTokenExpireTime());
 	}
 
 	public void updateRefreshTokenInfo(RefreshTokenInfo refreshTokenInfo) {
 		this.refreshToken = refreshTokenInfo.getRefreshToken();
-		this.refreshTokenExpirationTime = refreshTokenInfo.getRefreshTokenExpireTime();
+//		this.refreshTokenExpirationTime = refreshTokenInfo.getRefreshTokenExpireTime();
+        this.refreshTokenExpirationTime = convertToLocalDateTime(refreshTokenInfo.getRefreshTokenExpireTime());
 	}
+
+    private LocalDateTime convertToLocalDateTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
 
 }
