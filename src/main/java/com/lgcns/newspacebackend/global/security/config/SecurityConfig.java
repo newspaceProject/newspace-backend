@@ -7,8 +7,11 @@ import com.lgcns.newspacebackend.global.security.filter.JwtAuthenticationFilter;
 import com.lgcns.newspacebackend.global.security.filter.JwtAuthorizationFilter;
 import com.lgcns.newspacebackend.global.security.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,30 +52,56 @@ public class SecurityConfig{
         return filter;
     }
 	
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//            .csrf(csrf -> csrf.disable()) // CSRF 비활성화
+//            .authorizeHttpRequests(auth -> auth
+//                .requestMatchers("/api/news/**").permitAll() // 인증 없이 허용
+//                .requestMatchers("/api/user/**").permitAll() // 인증 없이 허용
+//                .requestMatchers("/api/**").permitAll() // 인증 없이 허용                
+////                .requestMatchers("/api/notice/**").hasRole("ADMIN") // ADMIN만 접근 가능
+//                .anyRequest().permitAll() // 그 외 모든 요청은 인증 필요
+//            )
+//            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 X
+//            .formLogin(form -> form.disable()) // 폼 로그인 비활성화
+//            .logout(logout -> logout.disable()); // 로그아웃 비활성화
+//
+//        // JWT 필터 추가 (filter 처리 순서 오류 발생)
+//        // 분석 꼭 해라...
+//        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+//        http.addFilterBefore(jwtAuthenticationFilter(userRepository), UsernamePasswordAuthenticationFilter.class);
+////        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//        
+//        // CORS 설정
+////        http.cors(Customizer.withDefaults());
+//      
+//        return http.build();
+//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable()) // CSRF 비활성화
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/news/**").permitAll() // 인증 없이 허용
-                .requestMatchers("/api/user/**").permitAll() // 인증 없이 허용
-                .requestMatchers("/api/**").permitAll() // 인증 없이 허용                
-//                .requestMatchers("/api/notice/**").hasRole("ADMIN") // ADMIN만 접근 가능
-                .anyRequest().permitAll() // 그 외 모든 요청은 인증 필요
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 X
-            .formLogin(form -> form.disable()) // 폼 로그인 비활성화
-            .logout(logout -> logout.disable()); // 로그아웃 비활성화
+        http.csrf((csrf) -> csrf.disable());
 
-        // JWT 필터 추가 (filter 처리 순서 오류 발생)
-        // 분석 꼭 해라...
+        http.sessionManagement((sessionManagement) ->
+                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
+
+        http.authorizeHttpRequests((authorizeHttpRequests) ->
+                authorizeHttpRequests
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+                        .anyRequest().permitAll()
+        );
+
+        // JWT 인증 및 인가 필터 추가
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter(userRepository), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        
-        // CORS 설정
-//        http.cors(Customizer.withDefaults());
-      
+        http.addFilterBefore(jwtAuthenticationFilter(userRepository), UsernamePasswordAuthenticationFilter.class);               
+
         return http.build();
     }
 }
