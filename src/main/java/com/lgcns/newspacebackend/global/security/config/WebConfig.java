@@ -5,6 +5,13 @@
 //import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 //import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //
+
+/* WebMvcConfigure은 반드시 
+ * CORS 설정
+ *  http.cors(Customizer.withDefaults()); 
+ *  CORS 설정을 반드시 해주어야한다
+ */
+
 //@Configuration
 //@EnableWebMvc
 //public class WebConfig implements WebMvcConfigurer {
