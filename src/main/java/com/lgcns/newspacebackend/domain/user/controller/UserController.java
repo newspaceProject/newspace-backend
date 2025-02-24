@@ -92,7 +92,7 @@ public class UserController
 	}
 
 	// 프로필 사진 삭제
-	@DeleteMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@DeleteMapping("/profile")
 	private ResponseEntity<Object> deleteProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
 	{
