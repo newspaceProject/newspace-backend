@@ -2,6 +2,7 @@ package com.lgcns.newspacebackend.global.security.filter;
 
 import java.io.IOException;
 
+import com.lgcns.newspacebackend.global.security.util.FilterResponseUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -93,6 +94,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //        FilterResponseUtil.sendFilterResponse(httpServletResponse,
 //                HttpServletResponse.SC_OK,
 //                BaseResponseStatus.LOGIN_SUCCESS);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest httpServletRequest,
+                                              HttpServletResponse httpServletResponse,
+                                              AuthenticationException failed) throws IOException {
+        log.info("[unsuccessfulAuthentication] 일반 로그인 실패");
+
+        // 실패 응답 전송
+        FilterResponseUtil.sendFilterResponse(httpServletResponse,
+                HttpServletResponse.SC_UNAUTHORIZED);
     }
     
 }

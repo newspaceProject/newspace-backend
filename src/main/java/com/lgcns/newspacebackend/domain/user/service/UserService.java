@@ -102,7 +102,7 @@ public class UserService
 		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 정보를 찾을 수 없습니다"));
 
 		// 닉네임 입력하면 닉네임 변경
-		if(requestDto.getNickname() != null && !requestDto.getNewPassword().isEmpty())
+		if(requestDto.getNickname() != null)
 		{
 			user.updateNickname(requestDto.getNickname());
 		}
@@ -179,14 +179,14 @@ public class UserService
 	public boolean isRefreshTokenValid(String refreshToken)
 	{
 		// 리프레시 토큰의 만료 시간 확인
-//        LocalDateTime refreshTokenExpirationTime = userRepository
-//                .findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
-		// 리프레시 토큰의 만료 시간 확인
-		Date refreshTokenExpirationDate = userRepository.findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
-
-		// Date를 LocalDateTime으로 변환
-		LocalDateTime refreshTokenExpirationTime = refreshTokenExpirationDate.toInstant().atZone(ZoneId.systemDefault())
-				.toLocalDateTime();
+        LocalDateTime refreshTokenExpirationTime = userRepository
+                .findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
+//		// 리프레시 토큰의 만료 시간 확인
+//		Date refreshTokenExpirationDate = userRepository.findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
+//
+//		// Date를 LocalDateTime으로 변환
+//		LocalDateTime refreshTokenExpirationTime = refreshTokenExpirationDate.toInstant().atZone(ZoneId.systemDefault())
+//				.toLocalDateTime();
 		// 현재 시간과 비교하여 유효 여부 반환
 		return !refreshTokenExpirationTime.isBefore(LocalDateTime.now());
 	}
