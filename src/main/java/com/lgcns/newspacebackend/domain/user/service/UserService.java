@@ -216,7 +216,7 @@ public class UserService
 			user.updateProfileImage(relativePath);
 			userRepository.save(user);
 			result.put("message", "프로필 이미지 수정 성공");
-			result.put("url", relativePath);
+			result.put("file", relativePath);
 			return result;
 		}
 		catch(Exception e)
