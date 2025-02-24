@@ -105,9 +105,9 @@ public class UserController
 			throws Exception
 	{
 		Resource resource = this.userService.getImageResource(this.uploadPath,userDetails);
+		log.info("이미지 파일 => "+resource.getFilename());
 		if(resource.exists() || resource.isReadable())
 		{
-			log.info("이미지 파일 => "+resource.getFilename());
 			String imageType = this.fileUtil.getFileExtension(resource.getFilename());
 			String fileName = "profile.jpg";
 			MediaType mediaType = MediaType.IMAGE_JPEG;
@@ -131,6 +131,7 @@ public class UserController
 	{
 		Path imagePath = Paths.get(uploadPath+day).resolve(filename);
 		Resource resource = new UrlResource(imagePath.toUri());
+		log.info("이미지 파일 => "+imagePath.toUri().toString());
 		if(resource.exists() || resource.isReadable())
 		{
 			String imageType = this.fileUtil.getFileExtension(imagePath.toUri().toString());

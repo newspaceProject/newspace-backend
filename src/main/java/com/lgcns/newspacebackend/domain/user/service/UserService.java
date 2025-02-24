@@ -231,6 +231,7 @@ public class UserService
 	{
 		User user = userDetails.getUser();
 		String profileImage = user.getProfileImage();
+		if(profileImage == null) profileImage = "";
 		Path imagePath = Paths.get(uploadDir + profileImage);
 		Resource resource = new UrlResource(imagePath.toUri());
 		return resource;
