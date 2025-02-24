@@ -243,8 +243,8 @@ public class UserService
 		Cookie cookie = jwtTokenUtil.removeTokenCookie();
 		// 빈 쿠키를 응답으로 반환하기
 		response.addCookie(cookie);
-		// 액세스 토큰 초기화
-		user.setAccessToken("");
+		// 액세스 토큰 초기화 (여러 유저가 같은 아이디 사용할때 로그아웃 테스트하면서 문제가 발생하는 것 같아서 임시 주석)
+//		user.setAccessToken("");
 		// 토큰들 만료시키기
 		user.setTokenExpirationTime(LocalDateTime.now());
 		userRepository.save(user);
