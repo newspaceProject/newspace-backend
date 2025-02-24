@@ -64,7 +64,7 @@ public class UserService
 		// 유저 등록
 		User user = User.builder().username(requestDto.getUsername())
 				.password(passwordEncoder.encode(requestDto.getPassword())).name(requestDto.getName())
-				.nickname(requestDto.getNickname()).birth(requestDto.getBirth()).profileImage(null)
+				.nickname(requestDto.getNickname()).birth(requestDto.getBirth()).profileImage("")
 				.userRole(UserRole.USER).build();
 
 		log.info("[회원가입 성공] username: {}", user.getUsername());
@@ -94,7 +94,7 @@ public class UserService
 		UserInfoResponseDto userInfo = new UserInfoResponseDto(user);
 		return userInfo;
 	}
-
+	
 	// 회원정보 수정
 	@Transactional
 	public void updateUserInfo(Long userId, UserInfoRequestDto requestDto)
