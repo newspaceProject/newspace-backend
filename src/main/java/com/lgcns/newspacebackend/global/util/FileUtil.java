@@ -47,9 +47,7 @@ public class FileUtil
 		// 파일을 저장할 디렉터리를 설정
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
 		ZonedDateTime now = ZonedDateTime.now();
-		String storedDir = uploadDir + now.format(dtf);
-		
-		log.info("storedDir => "+storedDir);
+		String storedDir = uploadDir +"/"+ now.format(dtf);
 		
 		File fileDir = new File(storedDir);
 		if(!fileDir.exists())
