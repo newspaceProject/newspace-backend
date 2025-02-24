@@ -190,4 +190,5 @@ public class UserController
 		userService.updateUserInfo(userDetails.getUser().getId(), requestDto);
 		return ResponseEntity.ok().build();
 	}
+
 }
