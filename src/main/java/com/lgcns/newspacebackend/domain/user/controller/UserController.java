@@ -129,7 +129,7 @@ public class UserController
 	public ResponseEntity<Resource> getImage(@PathVariable("day") String day, @PathVariable("filename") String filename)
 			throws MalformedURLException
 	{
-		Path imagePath = Paths.get(uploadPath+day).resolve(filename);
+		Path imagePath = Paths.get(uploadPath+"/"+ day).resolve(filename);
 		Resource resource = new UrlResource(imagePath.toUri());
 		log.info("이미지 파일 => "+imagePath.toUri().toString());
 		if(resource.exists() || resource.isReadable())
