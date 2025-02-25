@@ -53,6 +53,8 @@ public class SecurityConfig{
         return filter;
     }
 	
+    
+    // 
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        http
@@ -75,7 +77,7 @@ public class SecurityConfig{
 ////        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 //        
 //        // CORS 설정
-////        http.cors(Customizer.withDefaults());
+//        http.cors(Customizer.withDefaults());
 //      
 //        return http.build();
 //    }
@@ -101,8 +103,7 @@ public class SecurityConfig{
 
         // JWT 인증 및 인가 필터 추가
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter(userRepository), UsernamePasswordAuthenticationFilter.class);  
-//        http.cors(Customizer.withDefaults());            
+        http.addFilterBefore(jwtAuthenticationFilter(userRepository), UsernamePasswordAuthenticationFilter.class);          
 
         return http.build();
     }
