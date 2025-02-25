@@ -29,6 +29,7 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom "org.springframework.ai:spring-ai-bom:1.0.0-M4"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.3"
     }
 }
 
@@ -67,7 +68,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     // Spring Cloud 의존성 관리 (버전 관리용)
-    implementation 'org.springframework.cloud:spring-cloud-dependencies:2024.0.0' // 최신 버전 확인 필요
+    implementation 'org.springframework.cloud:spring-cloud-dependencies:2023.0.3' // 최신 버전 확인 필요
     
     // 스웨거 문서작성을 위한 어노테이션
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
