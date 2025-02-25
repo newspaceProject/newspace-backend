@@ -15,15 +15,16 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(
-                "http://kudong.kr:55020", 
-                "http://kudong.kr:55021", 
-                "http://kudong.kr:55022", 
-                "http://kudong.kr:55023",  
-                "http://kudong.kr:55025",  
-                "http://localhost:8080",
-                "http://localhost:8070",
-                "http://localhost:5173"));
+        config.setAllowedOrigins(List.of("*"));
+//		config.setAllowedOrigins(List.of(
+//                "http://kudong.kr:55020", 
+//                "http://kudong.kr:55021", 
+//                "http://kudong.kr:55022", 
+//                "http://kudong.kr:55023",  
+//                "http://kudong.kr:55025",  
+//                "http://localhost:8080",
+//                "http://localhost:8070",
+//                "http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.addAllowedHeader("*");
         config.addExposedHeader("*");
