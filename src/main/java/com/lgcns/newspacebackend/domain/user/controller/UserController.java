@@ -36,6 +36,9 @@ import com.lgcns.newspacebackend.domain.user.service.UserService;
 import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
 import com.lgcns.newspacebackend.global.util.FileUtil;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/user/")
 @RequiredArgsConstructor
+@Tag(name = "UserController - 유저관련 api")
 public class UserController
 {
 
@@ -63,6 +67,7 @@ public class UserController
 	 * @param userDetails 응답으로 보낼 유저 엔티티입니다.
 	 * @return 로그아웃 성공 메시지
 	 */
+	@Operation(summary = "로그아웃 api", description = "사용자의 인가를 증명하는 쿠키안의 토큰을 제거하여 로그아웃 상태로 만들어줍니다.")
 	@PostMapping("/logout")
 	public ResponseEntity<String> logout(HttpServletResponse response,
 			@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception
@@ -79,6 +84,7 @@ public class UserController
 	 * @param userDetails 응답으로 보낼 유저 엔티티입니다.
 	 * @return 회원탈퇴 성공 메시지
 	 */
+	@Operation(summary = "회원탈퇴 api", description = "현재 인증된 유저를 엔티ㅣ에서 삭제합니다.")
 	@DeleteMapping("/signout")
 	public ResponseEntity<String> deleteUser(HttpServletResponse response,
 			@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception
@@ -94,6 +100,7 @@ public class UserController
 	 * @param request 다중, 단일 파일을 올리기 위한 멀티파트 요청 
 	 * @return UserService.updateProfieImage 메서드에 유저와 파일경로를 반환합니다.
 	 */
+	@Operation(summary = "프로필 이미지 업로드 api", description = "현재 인증된 사용자의 엔티티에 이미지 경로를 저장합니다.")
 	@PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private ResponseEntity<Object> createProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails,
 			MultipartHttpServletRequest request) throws Exception
@@ -110,6 +117,7 @@ public class UserController
 	 * @param request 다중, 단일 파일을 올리기 위한 멀티파트 요청 
 	 * @return UserService.updateProfieImage 메서드에 유저와 파일경로를 반환합니다.
 	 */
+	@Operation(summary = "프로필 이미지 수정 api", description = "현재 인증된 사용자 엔티티를 불러와서 수정된 이미지 경로를 저장합니다.")
 	@PutMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private ResponseEntity<Object> updateProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails,
 			MultipartHttpServletRequest request) throws Exception
@@ -125,6 +133,7 @@ public class UserController
 	 * @param userDetails 유저 정보 가져오기
 	 * @return 프로필 사진경로를 "" 상태로 초기화 합니다
 	 */
+	@Operation(summary = "프로필 이미지 삭제 api", description = "현재 인증된 사용자의 엔티티에 이미지 경로를 공백(삭제)상태로 만듭니다.")
 	@DeleteMapping("/profile")
 	private ResponseEntity<Object> deleteProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
@@ -139,6 +148,7 @@ public class UserController
 	 * @param userDetails 유저 정보 가져오기
 	 * @return 이미지가 불러와지면 이미지이름을 확장자 경로로 추가해서 반환, 불러올 이미지가 없을 시 notFound 반환 
 	 */
+	@Operation(summary = "미니 프로필의 이미지 경로를 조회하는 api", description = "현재 인증된 사용자의 엔티티에 이미지 경로를 조회합니다.")
 	@GetMapping("/profile")
 	public ResponseEntity<Resource> getProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
@@ -166,10 +176,11 @@ public class UserController
 	/**
 	 * 이미지 경로 탐색 서비스
 	 * 고유하게 설정된 이미지별 경로를 가져와서 화면에 띄어주는 서비스를 수행합니다.
-	 * @param day 이미지를 분류 하기위해 폴더 경로중 날짜 폴더 추가합니다.
-	 * @param filename경로를 다른 Path 경로와 새로운 경로로 만들어줍니다. 
+	 * @param day 이미지를 분류 하기위해 폴더 경로중 날짜 폴더를 추가합니다.
+	 * @param filename 경로를 다른 Path 경로와 새로운 경로로 만들어줍니다. 
 	 * @return 이미지 형식의 경로를 반환합니다.
 	 */
+	@Operation(summary = "상세페이지의 이미지의 경로를 조회하는 api", description = "현재 인증된 사용자의 상세페이지에서 이미지를 조회합니다.")
 	@GetMapping("/image/{day}/{filename}")
 	public ResponseEntity<Resource> getImage(@PathVariable("day") String day, @PathVariable("filename") String filename)
 			throws MalformedURLException
@@ -201,7 +212,7 @@ public class UserController
 	 * @param requestDto 회원가입 정보들의 요청을 받아줄 Dto
 	 * @return 회원가입 성공 메시지 리턴
 	 */
-	// 회원가입
+	@Operation(summary = "회원가입 api", description = "회원가입에 필요한 로직 처리")
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult)
 			throws MethodArgumentNotValidException
@@ -216,7 +227,7 @@ public class UserController
 	 * @param username 유저아이디
 	 * @return boolean 값에 따른 200 / 400 반환
 	 */
-	// 아이디 중복 체크
+	@Operation(summary = "아이디의 중복을 체크하는 api", description = "중복된 유저인지 확인합니다.")
 	@GetMapping("/check-id")
 	public ResponseEntity<?> checkId(@RequestParam("username") String username)
 	{
@@ -237,7 +248,8 @@ public class UserController
 	 * 인덱스로 유저 조회하는 서비스
 	 * @param userDetails 유저 정보
 	 * @return getUserInfo 리턴
-	 */
+	 */	
+	@Operation(summary = "유저의 정보를 조회하는 api", description = "현재 인증된 사용자 엔티티의 정보를 모두 가져옵니다.")
 	@GetMapping("/info")
 	public ResponseEntity<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails)
 	{
@@ -251,6 +263,7 @@ public class UserController
 	 * @param requestDto 수정 요청할 정보
 	 * @return 200 반환
 	 */
+	@Operation(summary = "유저 정보를 수정하는 api", description = "현재 인증된 사용자 엔티티의 정보를 수정합니다.")
 	@PatchMapping("/info")
 	public ResponseEntity<?> updateUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails,
 			@RequestBody UserInfoRequestDto requestDto)
