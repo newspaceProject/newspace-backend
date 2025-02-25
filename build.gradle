@@ -72,6 +72,9 @@ dependencies {
     
     // 스웨거 문서작성을 위한 어노테이션
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    
+    // Spring Boot 액추에이터 스타터 (옵션, 모니터링 용도)
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 tasks.named('test') {
