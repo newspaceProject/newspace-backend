@@ -24,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -92,16 +93,16 @@ public class SecurityConfig{
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(List.of("*"));
-//		config.setAllowedOrigins(List.of(
-//                "http://kudong.kr:55020", 
-//                "http://kudong.kr:55021", 
-//                "http://kudong.kr:55022", 
-//                "http://kudong.kr:55023",  
-//                "http://kudong.kr:55025",  
-//                "http://localhost:8080",
-//                "http://localhost:8070",
-//                "http://localhost:5173"));
+//        config.setAllowedOriginPatterns(List.of("*"));
+		config.setAllowedOrigins(List.of(
+                "http://kudong.kr:55020",
+                "http://kudong.kr:55021",
+                "http://kudong.kr:55022",
+                "http://kudong.kr:55023",
+                "http://kudong.kr:55025",
+                "http://localhost:8080",
+                "http://localhost:8070",
+                "http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.addAllowedHeader("*");
         config.addExposedHeader("*");
@@ -117,16 +118,22 @@ public class SecurityConfig{
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        http.authorizeHttpRequests((authorizeHttpRequests) ->
-                authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
-                        .anyRequest().permitAll()
+//        http.authorizeHttpRequests((authorizeHttpRequests) ->
+//                authorizeHttpRequests
+//                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
+//                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
+//                        .requestMatchers(HttpMethod.PATCH, "/api/**").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+//                        .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
+//                        .requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
+//                        .anyRequest().permitAll()
+//        );
+
+        http.securityMatchers(matchers ->
+                matchers.requestMatchers(CorsUtils::isPreFlightRequest)
+        ).authorizeHttpRequests(auth ->
+                auth.anyRequest().permitAll()
         );
 
         http.addFilterBefore(corsFilter(), ChannelProcessingFilter.class);
