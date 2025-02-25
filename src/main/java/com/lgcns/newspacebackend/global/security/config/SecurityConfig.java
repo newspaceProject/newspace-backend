@@ -88,28 +88,29 @@ public class SecurityConfig{
 //      
 //        return http.build();
 //    }
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-//        config.setAllowedOriginPatterns(List.of("*"));
-		config.setAllowedOrigins(List.of(
-                "http://kudong.kr:55020",
-                "http://kudong.kr:55021",
-                "http://kudong.kr:55022",
-                "http://kudong.kr:55023",
-                "http://kudong.kr:55025",
-                "http://localhost:8080",
-                "http://localhost:8070",
-                "http://localhost:5173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.addAllowedHeader("*");
-        config.addExposedHeader("*");
-        config.setMaxAge(3600L);
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true);
+////        config.setAllowedOriginPatterns(List.of("*"));
+//		config.setAllowedOrigins(List.of(
+//                "http://kudong.kr:55020",
+//                "http://kudong.kr:55021",
+//                "http://kudong.kr:55022",
+//                "http://kudong.kr:55023",
+//                "http://kudong.kr:55025",
+//                "http://localhost:8080",
+//                "http://localhost:8070",
+//                "http://localhost:5173"));
+//        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+//        config.addAllowedHeader("*");
+//        config.addExposedHeader("*");
+//        config.setMaxAge(3600L);
+//        source.registerCorsConfiguration("/**", config);
+//        return new CorsFilter(source);
+//
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     	http.csrf((csrf) -> csrf.disable());
@@ -118,25 +119,25 @@ public class SecurityConfig{
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        http.authorizeHttpRequests((authorizeHttpRequests) ->
-                authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
-                        .anyRequest().permitAll()
-        );
-
-//        http.securityMatchers(matchers ->
-//                matchers.requestMatchers(CorsUtils::isPreFlightRequest)
-//        ).authorizeHttpRequests(auth ->
-//                auth.anyRequest().permitAll()
+//        http.authorizeHttpRequests((authorizeHttpRequests) ->
+//                authorizeHttpRequests
+//                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
+//                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
+//                        .requestMatchers(HttpMethod.PATCH, "/api/**").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+//                        .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
+//                        .anyRequest().permitAll()
 //        );
 
-        http.addFilterBefore(corsFilter(), ChannelProcessingFilter.class);
+        http.securityMatchers(matchers ->
+                matchers.requestMatchers(CorsUtils::isPreFlightRequest)
+        ).authorizeHttpRequests(auth ->
+                auth.anyRequest().permitAll()
+        );
+
+//        http.addFilterBefore(corsFilter(), ChannelProcessingFilter.class);
         // JWT 인증 및 인가 필터 추가
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(userRepository), UsernamePasswordAuthenticationFilter.class);
