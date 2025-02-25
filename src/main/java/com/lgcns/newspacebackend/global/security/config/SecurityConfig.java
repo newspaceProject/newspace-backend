@@ -126,7 +126,7 @@ public class SecurityConfig{
                         .requestMatchers(HttpMethod.PATCH, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
                         .anyRequest().permitAll()
         );
 
