@@ -62,6 +62,14 @@ dependencies {
 
     // Spring AI
     implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+    
+    // 스프링 클라우드 의존성들
+
+    // 유레카 클라이언트를 위한 Spring Cloud 스타터
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    // Spring Cloud 의존성 관리 (버전 관리용)
+    implementation 'org.springframework.cloud:spring-cloud-dependencies:2023.0.0' // 최신 버전 확인 필요
 }
 
 tasks.named('test') {

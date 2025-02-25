@@ -210,6 +210,12 @@ public class UserController
 		return ResponseEntity.ok("회원가입 성공");
 	}
 
+	/**
+	 * 아이디 중복 체크 서비스
+	 * UserService의 checkId 메서드 수행
+	 * @param username 유저아이디
+	 * @return boolean 값에 따른 200 / 400 반환
+	 */
 	// 아이디 중복 체크
 	@GetMapping("/check-id")
 	public ResponseEntity<?> checkId(@RequestParam("username") String username)
@@ -225,15 +231,26 @@ public class UserController
 			return ResponseEntity.badRequest().build();
 		}
 	}
-
-	// 회원정보 조회
+	
+	/**
+	 * 회원정보 조회 서비스 
+	 * 인덱스로 유저 조회하는 서비스
+	 * @param userDetails 유저 정보
+	 * @return getUserInfo 리턴
+	 */
 	@GetMapping("/info")
 	public ResponseEntity<UserInfoResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails)
 	{
 		return ResponseEntity.ok(userService.getUserInfo(userDetails.getUser().getId()));
 	}
 
-	// 회원정보 수정
+	/**
+	 * 회원정보 수정 서비스
+	 * 요청 Dto에 따른 유저 데이터 수정
+	 * @param userDetails 유저 정보 불러오기
+	 * @param requestDto 수정 요청할 정보
+	 * @return 200 반환
+	 */
 	@PatchMapping("/info")
 	public ResponseEntity<?> updateUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails,
 			@RequestBody UserInfoRequestDto requestDto)
