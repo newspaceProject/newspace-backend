@@ -42,6 +42,13 @@ public class UserService
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenUtil jwtTokenUtil;
 
+	/**
+	 * 회원가입 서비스
+	 * 
+	 * @param requestDto
+	 * @param bindingResult
+	 * @throws MethodArgumentNotValidException
+	 */
 	// 회원가입
 	@Transactional
 	public void signup(SignupRequestDto requestDto, BindingResult bindingResult) throws MethodArgumentNotValidException
