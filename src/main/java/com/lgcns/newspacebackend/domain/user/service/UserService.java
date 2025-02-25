@@ -102,7 +102,7 @@ public class UserService
 		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 정보를 찾을 수 없습니다"));
 
 		// 닉네임 입력하면 닉네임 변경
-		if(requestDto.getNickname() != null && !requestDto.getNewPassword().isEmpty())
+		if(requestDto.getNickname() != null)
 		{
 			user.updateNickname(requestDto.getNickname());
 		}
@@ -179,14 +179,14 @@ public class UserService
 	public boolean isRefreshTokenValid(String refreshToken)
 	{
 		// 리프레시 토큰의 만료 시간 확인
-//        LocalDateTime refreshTokenExpirationTime = userRepository
-//                .findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
-		// 리프레시 토큰의 만료 시간 확인
-		Date refreshTokenExpirationDate = userRepository.findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
-
-		// Date를 LocalDateTime으로 변환
-		LocalDateTime refreshTokenExpirationTime = refreshTokenExpirationDate.toInstant().atZone(ZoneId.systemDefault())
-				.toLocalDateTime();
+        LocalDateTime refreshTokenExpirationTime = userRepository
+                .findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
+//		// 리프레시 토큰의 만료 시간 확인
+//		Date refreshTokenExpirationDate = userRepository.findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
+//
+//		// Date를 LocalDateTime으로 변환
+//		LocalDateTime refreshTokenExpirationTime = refreshTokenExpirationDate.toInstant().atZone(ZoneId.systemDefault())
+//				.toLocalDateTime();
 		// 현재 시간과 비교하여 유효 여부 반환
 		return !refreshTokenExpirationTime.isBefore(LocalDateTime.now());
 	}
@@ -216,7 +216,7 @@ public class UserService
 			user.updateProfileImage(relativePath);
 			userRepository.save(user);
 			result.put("message", "프로필 이미지 수정 성공");
-			result.put("url", relativePath);
+			result.put("file", relativePath);
 			return result;
 		}
 		catch(Exception e)
@@ -231,6 +231,7 @@ public class UserService
 	{
 		User user = userDetails.getUser();
 		String profileImage = user.getProfileImage();
+		if(profileImage == null) profileImage = "";
 		Path imagePath = Paths.get(uploadDir + profileImage);
 		Resource resource = new UrlResource(imagePath.toUri());
 		return resource;
@@ -242,8 +243,8 @@ public class UserService
 		Cookie cookie = jwtTokenUtil.removeTokenCookie();
 		// 빈 쿠키를 응답으로 반환하기
 		response.addCookie(cookie);
-		// 액세스 토큰 초기화
-		user.setAccessToken("");
+		// 액세스 토큰 초기화 (여러 유저가 같은 아이디 사용할때 로그아웃 테스트하면서 문제가 발생하는 것 같아서 임시 주석)
+//		user.setAccessToken("");
 		// 토큰들 만료시키기
 		user.setTokenExpirationTime(LocalDateTime.now());
 		userRepository.save(user);

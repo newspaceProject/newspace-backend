@@ -6,6 +6,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +20,7 @@ import java.util.List;
  * @author KUDONG
  *
  */
+@Slf4j
 @Component
 public class FileUtil
 {
@@ -37,13 +40,15 @@ public class FileUtil
 
 		if(ObjectUtils.isEmpty(request))
 		{
+			log.info("file request is null");
 			return null;
 		}
 
 		// 파일을 저장할 디렉터리를 설정
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
 		ZonedDateTime now = ZonedDateTime.now();
-		String storedDir = uploadDir+"/profile/"+now.format(dtf);
+		String storedDir = uploadDir +"/"+ now.format(dtf);
+		
 		File fileDir = new File(storedDir);
 		if(!fileDir.exists())
 		{
@@ -91,7 +96,7 @@ public class FileUtil
 					// 저장에 사용할 파일 이름을 조합
 					String storedFileName = Long.toString(System.nanoTime())+originalFileExtension;
 					String storedFilePath = storedDir+"/"+storedFileName;
-
+					log.info("파일 저장 => "+storedFilePath);
 					// 파일 저장
 					fileDir = new File(storedFilePath);
 					file.transferTo(fileDir);

@@ -92,7 +92,7 @@ public class UserController
 	}
 
 	// 프로필 사진 삭제
-	@DeleteMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@DeleteMapping("/profile")
 	private ResponseEntity<Object> deleteProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails)
 			throws Exception
 	{
@@ -105,9 +105,9 @@ public class UserController
 			throws Exception
 	{
 		Resource resource = this.userService.getImageResource(this.uploadPath,userDetails);
+		log.info("이미지 파일 => "+resource.getFilename());
 		if(resource.exists() || resource.isReadable())
 		{
-			log.info("이미지 파일 => "+resource.getFilename());
 			String imageType = this.fileUtil.getFileExtension(resource.getFilename());
 			String fileName = "profile.jpg";
 			MediaType mediaType = MediaType.IMAGE_JPEG;
@@ -129,8 +129,9 @@ public class UserController
 	public ResponseEntity<Resource> getImage(@PathVariable("day") String day, @PathVariable("filename") String filename)
 			throws MalformedURLException
 	{
-		Path imagePath = Paths.get(uploadPath+day).resolve(filename);
+		Path imagePath = Paths.get(uploadPath+"/"+ day).resolve(filename);
 		Resource resource = new UrlResource(imagePath.toUri());
+		
 		if(resource.exists() || resource.isReadable())
 		{
 			String imageType = this.fileUtil.getFileExtension(imagePath.toUri().toString());
@@ -189,4 +190,5 @@ public class UserController
 		userService.updateUserInfo(userDetails.getUser().getId(), requestDto);
 		return ResponseEntity.ok().build();
 	}
+
 }
