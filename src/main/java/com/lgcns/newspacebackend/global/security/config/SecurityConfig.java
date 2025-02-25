@@ -118,23 +118,23 @@ public class SecurityConfig{
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-//        http.authorizeHttpRequests((authorizeHttpRequests) ->
-//                authorizeHttpRequests
-//                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.PATCH, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
-//                        .anyRequest().permitAll()
-//        );
-
-        http.securityMatchers(matchers ->
-                matchers.requestMatchers(CorsUtils::isPreFlightRequest)
-        ).authorizeHttpRequests(auth ->
-                auth.anyRequest().permitAll()
+        http.authorizeHttpRequests((authorizeHttpRequests) ->
+                authorizeHttpRequests
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
+                        .anyRequest().permitAll()
         );
+
+//        http.securityMatchers(matchers ->
+//                matchers.requestMatchers(CorsUtils::isPreFlightRequest)
+//        ).authorizeHttpRequests(auth ->
+//                auth.anyRequest().permitAll()
+//        );
 
         http.addFilterBefore(corsFilter(), ChannelProcessingFilter.class);
         // JWT 인증 및 인가 필터 추가
