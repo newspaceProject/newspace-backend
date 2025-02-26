@@ -7,6 +7,8 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
+import com.lgcns.newspacebackend.global.exception.BaseException;
+import com.lgcns.newspacebackend.global.exception.BaseResponseStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -93,10 +95,10 @@ public class JwtTokenUtil {
                 String tokenSubstring = token.substring(7);
                 return tokenSubstring;
             } else {
-            	 throw new IllegalArgumentException("Invalid Bearer grant type");
+            	 throw new BaseException(BaseResponseStatus.INVALID_BEARER_GRANT_TYPE);
             }
         }
-        throw new IllegalArgumentException("Token not found");
+        throw new BaseException(BaseResponseStatus.TOKEN_INVALID);
     }
 
     /**
@@ -111,9 +113,9 @@ public class JwtTokenUtil {
             log.info("[validateToken] 검증 완료");
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
-            throw new IllegalArgumentException("Token is invalid");
+            throw new BaseException(BaseResponseStatus.TOKEN_INVALID);
         } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException("Token has expired");
+            throw new BaseException(BaseResponseStatus.TOKEN_EXPIRED);
         }
     }
 
@@ -132,7 +134,7 @@ public class JwtTokenUtil {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Token is invalid");
+            throw new BaseException(BaseResponseStatus.TOKEN_INVALID);
         }
         log.info("[getTokenClaims] 클레임 추출");
         return claims;
@@ -199,7 +201,7 @@ public class JwtTokenUtil {
     /**
      * 액세스 토큰 정보를 생성합니다. (email 기반)
      *
-     * @param email 사용자 로그인 ID
+     * @param username 사용자 로그인 ID
      * @return 액세스 토큰 정보
      */
     public JwtTokenInfo.AccessTokenInfo createAccessTokenInfo(String username, UserRole userRole) {
@@ -215,7 +217,7 @@ public class JwtTokenUtil {
     /**
      * 리프레시 토큰 정보를 생성합니다. (email 기반)
      *
-     * @param email 사용자 로그인 ID
+     * @param username 사용자 로그인 ID
      * @return 리프레시 토큰 정보
      */
     public JwtTokenInfo.RefreshTokenInfo createRefreshTokenInfo(String username, UserRole userRole) {

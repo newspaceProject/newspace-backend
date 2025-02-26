@@ -4,6 +4,8 @@ import com.lgcns.newspacebackend.domain.notice.dto.NoticeRequestDto;
 import com.lgcns.newspacebackend.domain.notice.dto.NoticeResponseDto;
 import com.lgcns.newspacebackend.domain.notice.entity.Notice;
 import com.lgcns.newspacebackend.domain.notice.repository.NoticeRepository;
+import com.lgcns.newspacebackend.global.exception.BaseException;
+import com.lgcns.newspacebackend.global.exception.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,7 +61,7 @@ public class NoticeService {
     // noticeId로 repository에서 notice 조회
     private Notice getNoticeForRepository(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new RuntimeException("해당 공지사항 id에 맞는 공지사항을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_NOTICE));
         return notice;
     }
 }

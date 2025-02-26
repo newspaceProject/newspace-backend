@@ -4,6 +4,8 @@ import com.lgcns.newspacebackend.domain.news.dto.NewsCategoryRequestDto;
 import com.lgcns.newspacebackend.domain.news.dto.NewsCategoryResponseDto;
 import com.lgcns.newspacebackend.domain.news.entity.NewsCategory;
 import com.lgcns.newspacebackend.domain.news.repository.NewsCategoryRepository;
+import com.lgcns.newspacebackend.global.exception.BaseException;
+import com.lgcns.newspacebackend.global.exception.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -66,7 +68,7 @@ public class NewsCategoryService {
     // categoryId로 repository 에서 category 조회
     private NewsCategory getNewsCategoryForRepository(Long categoryId) {
         NewsCategory category = newsCategoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("해당 카테고리 id에 맞는 카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_CATEGORY));
         return category;
     }
 }

@@ -1,5 +1,7 @@
 package com.lgcns.newspacebackend.global.security;
 
+import com.lgcns.newspacebackend.global.exception.BaseException;
+import com.lgcns.newspacebackend.global.exception.BaseResponseStatus;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,10 +20,8 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     // 유저 이름으로 레포지토리에서 찾아내는 클래스
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { 
-        User userEntity = userRepository.findByUsername(username).orElseThrow(()-> new IllegalIdentifierException("user is not exist"));
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("등록된 사용자가 없습니다.");
-        }
-        return new UserDetailsImpl(userEntity);
+        User user = userRepository.findByUsername(username).orElseThrow(
+                ()-> new BaseException(BaseResponseStatus.USER_NOT_FOUND));
+        return new UserDetailsImpl(user);
     }
 }

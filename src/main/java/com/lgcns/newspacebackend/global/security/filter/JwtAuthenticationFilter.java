@@ -2,6 +2,7 @@ package com.lgcns.newspacebackend.global.security.filter;
 
 import java.io.IOException;
 
+import com.lgcns.newspacebackend.global.exception.BaseResponseStatus;
 import com.lgcns.newspacebackend.global.security.util.FilterResponseUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -88,12 +89,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         userService.updateAccessToken(user, accessTokenInfo);
         userService.updateRefreshToken(user, refreshTokenInfo);
 
-        
-        // 예외처리로직을 직접 작성할 것이 아니기에 Filter 상의 응답이 필요하지 않다.
-//        // 성공 응답 전송
-//        FilterResponseUtil.sendFilterResponse(httpServletResponse,
-//                HttpServletResponse.SC_OK,
-//                BaseResponseStatus.LOGIN_SUCCESS);
+        // 성공 응답 전송
+        FilterResponseUtil.sendFilterResponse(httpServletResponse,
+                HttpServletResponse.SC_OK,
+                BaseResponseStatus.LOGIN_SUCCESS);
     }
 
     @Override
@@ -104,7 +103,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // 실패 응답 전송
         FilterResponseUtil.sendFilterResponse(httpServletResponse,
-                HttpServletResponse.SC_UNAUTHORIZED);
+                HttpServletResponse.SC_UNAUTHORIZED,
+                BaseResponseStatus.LOGIN_FAILED);
     }
     
 }

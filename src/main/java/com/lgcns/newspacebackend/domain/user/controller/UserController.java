@@ -218,16 +218,8 @@ public class UserController
 	@GetMapping("/check-id")
 	public ResponseEntity<?> checkId(@RequestParam("username") String username)
 	{
-		boolean isValid = userService.checkId(username);
-
-		if(isValid)
-		{
-			return ResponseEntity.ok().build();
-		}
-		else
-		{
-			return ResponseEntity.badRequest().build();
-		}
+		userService.checkId(username);
+		return ResponseEntity.ok().build();
 	}
 	
 	/**

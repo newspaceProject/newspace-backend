@@ -4,6 +4,8 @@ import com.lgcns.newspacebackend.domain.news.dto.NewsKeywordRequestDto;
 import com.lgcns.newspacebackend.domain.news.dto.NewsKeywordResponseDto;
 import com.lgcns.newspacebackend.domain.news.entity.NewsKeyword;
 import com.lgcns.newspacebackend.domain.news.repository.NewsKeywordRepository;
+import com.lgcns.newspacebackend.global.exception.BaseException;
+import com.lgcns.newspacebackend.global.exception.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 public class NewsKeywordService {
     private final NewsKeywordRepository newsKeywordRepository;
 
-    // 카테고리 등록
+    // 키워드 등록
     @Transactional
     public NewsKeywordResponseDto createNewsKeyword(NewsKeywordRequestDto requestDto) {
         NewsKeyword keyword = NewsKeyword.builder()
@@ -29,7 +31,7 @@ public class NewsKeywordService {
         return new NewsKeywordResponseDto(keyword);
     }
 
-    // 카테고리 목록 조회
+    // 키워드 목록 조회
     @Transactional(readOnly = true)
     public List<NewsKeywordResponseDto> getNewsKeywords() {
         List<NewsKeywordResponseDto> keywordResponseDtoList = newsKeywordRepository.findAll()
@@ -40,7 +42,7 @@ public class NewsKeywordService {
         return keywordResponseDtoList;
     }
 
-    // 카테고리 수정
+    // 키워드 수정
     @Transactional
     public NewsKeywordResponseDto updateNewsKeyword(Long keywordId, NewsKeywordRequestDto requestDto) {
         NewsKeyword keyword = getNewsKeywordForRepository(keywordId);
@@ -51,7 +53,7 @@ public class NewsKeywordService {
         return new NewsKeywordResponseDto(keyword);
     }
 
-    // 카테고리 삭제
+    // 키워드 삭제
     @Transactional
     public void deleteNewsKeyword(Long keywordId) {
         NewsKeyword keyword = getNewsKeywordForRepository(keywordId);
@@ -62,7 +64,7 @@ public class NewsKeywordService {
     // keywordId로 repository 에서 keyword 조회
     private NewsKeyword getNewsKeywordForRepository(Long keywordId) {
         NewsKeyword keyword = newsKeywordRepository.findById(keywordId)
-                .orElseThrow(() -> new RuntimeException("해당 카테고리 id에 맞는 카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_FOUND_KEYWORD));
         return keyword;
     }
 }
