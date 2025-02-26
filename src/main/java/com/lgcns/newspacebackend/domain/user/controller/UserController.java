@@ -216,7 +216,7 @@ public class UserController
 	 */
 	@Operation(summary = "아이디의 중복을 체크하는 api", description = "중복된 유저인지 확인합니다.")
 	@GetMapping("/check-id")
-	public ResponseEntity<?> checkId(@RequestParam("username") String username)
+	public ResponseEntity<Boolean> checkId(@RequestParam("username") String username)
 	{
 		return ResponseEntity.ok(userService.checkId(username));
 	}
