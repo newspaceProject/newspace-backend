@@ -16,21 +16,21 @@
             <img src="https://avatars.githubusercontent.com/u/151743721?v=4" alt="Avatar" width="100px"/><br/>
             <a href="https://github.com/95hyun">현민영</a>
             <br/>
-            <img src="" alt="95hyun's GitHub stats" width="350px"/>
+            <img src="https://github-readme-stats.vercel.app/api?username=95hyun&show_icons=true&theme=transparent" alt="95hyun's GitHub stats" width="350px"/>
         </td>
         <!-- 두 번째 팀원 -->
         <td align="center" width="50%">
             <img src="https://avatars.githubusercontent.com/u/39462045?v=4" alt="Avatar" width="100px"/><br/>
             <a href="https://github.com/dhku">구동혁</a>
             <br/>
-            <img src="" alt="dhku's GitHub stats" width="350px"/>
+            <img src="https://github-readme-stats.vercel.app/api?username=dhku&show_icons=true&theme=transparent" alt="dhku's GitHub stats" width="350px"/>
         </td>
         <!-- 세 번째 팀원 -->
         <td align="center" width="50%">
             <img src="https://avatars.githubusercontent.com/u/124752866?v=4" alt="Avatar" width="100px"/><br/>
             <a href="https://github.com/minnnseokk">정민석</a>
             <br/>
-            <img src="" alt="minnnseokk's GitHub stats" width="350px"/>
+            <img src="https://github-readme-stats.vercel.app/api?username=minnnseokk&show_icons=true&theme=transparent" alt="minnnseokk's GitHub stats" width="350px"/>
         </td>
     </tr>
 </table>
