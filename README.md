@@ -29,9 +29,9 @@ LG CNS AM Inspire Camp
             <br/>
             <img src="https://github-readme-stats.vercel.app/api?username=95hyun&show_icons=true&theme=transparent" alt="95hyun's GitHub stats" width="300px"/>
             <br/>
-            Spring AI 뉴스, 회원가입, 개인정보 관련, 
+            Spring AI(뉴스), 예외처리,
             <br>
-            카테고리/키워드/공지 CRUD,
+            회원/카테고리/키워드/공지 CRUD
             <br>
             Spring Cloud Gateway 
         </td>
