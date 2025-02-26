@@ -81,8 +81,11 @@ public class UserService
 	@Transactional
 	public void checkId(String username)
 	{
-		userRepository.findByUsername(username)
-				.orElseThrow(() -> new BaseException(BaseResponseStatus.USERNAME_ALREADY_EXISTS));
+		boolean isUserExists = userRepository.findByUsername(username).isPresent();
+
+		if (isUserExists) {
+			throw new BaseException(BaseResponseStatus.USERNAME_ALREADY_EXISTS);
+		}
 	}
 
 	// 회원정보 조회
