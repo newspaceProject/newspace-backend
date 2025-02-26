@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/news")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "NewsAIController ")
+@Tag(name = "NewsAIController - 뉴스데이터 처리를 위한 ai API")
 public class NewsAIController {
     private final NewsAIService newsAIService;
 	@Operation(summary = "뉴스데이터를 정리해서 보내기위한 ai로직 api" , description = "뉴스데이터를 불러오는 ai 로직 처리")

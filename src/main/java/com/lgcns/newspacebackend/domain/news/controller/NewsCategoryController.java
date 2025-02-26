@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/news/category")
 @RequiredArgsConstructor
-@Tag(name = "NewsCategoryController - 뉴스 카테고리 crud를 위한 api")
+@Tag(name = "NewsCategoryController - 뉴스 카테고리 CRUD를 위한 API")
 public class NewsCategoryController {
 
     private final NewsCategoryService newsCategoryService;
