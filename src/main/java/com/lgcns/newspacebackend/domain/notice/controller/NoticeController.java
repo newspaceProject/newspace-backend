@@ -3,6 +3,8 @@ package com.lgcns.newspacebackend.domain.notice.controller;
 import com.lgcns.newspacebackend.domain.notice.dto.NoticeRequestDto;
 import com.lgcns.newspacebackend.domain.notice.dto.NoticeResponseDto;
 import com.lgcns.newspacebackend.domain.notice.service.NoticeService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/notice")
 @RequiredArgsConstructor
+@Tag(name = "NoticeController - 관리자 공지사항 관련 crud api")
 public class NoticeController {
     private final NoticeService noticeService;
 
