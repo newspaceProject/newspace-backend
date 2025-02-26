@@ -79,13 +79,15 @@ public class UserService
 
 	// 유저아이디 중복 체크
 	@Transactional
-	public void checkId(String username)
+	public boolean checkId(String username)
 	{
 		boolean isUserExists = userRepository.findByUsername(username).isPresent();
 
 		if (isUserExists) {
 			throw new BaseException(BaseResponseStatus.USERNAME_ALREADY_EXISTS);
 		}
+
+		return true;
 	}
 
 	// 회원정보 조회

@@ -218,8 +218,8 @@ public class UserController
 	@GetMapping("/check-id")
 	public ResponseEntity<?> checkId(@RequestParam("username") String username)
 	{
-		userService.checkId(username);
-		return ResponseEntity.ok().build();
+		boolean isAvailable = userService.checkId(username);
+		return ResponseEntity.ok(isAvailable);
 	}
 	
 	/**
