@@ -242,7 +242,7 @@ public class JwtTokenUtil {
         Cookie cookie = new Cookie(AUTHORIZATION_HEADER, encodedToken);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setSecure(false);
+        cookie.setSecure(true);
         log.info("[addTokenToCookie] 쿠키 내 JWT 토큰 추가");
         return cookie;
     }
