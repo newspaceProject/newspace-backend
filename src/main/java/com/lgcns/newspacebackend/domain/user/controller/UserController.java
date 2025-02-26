@@ -1,11 +1,16 @@
 package com.lgcns.newspacebackend.domain.user.controller;
 
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javax.validation.Valid;
-
+import com.lgcns.newspacebackend.domain.user.dto.SignupRequestDto;
+import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
+import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
+import com.lgcns.newspacebackend.domain.user.service.UserService;
+import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
+import com.lgcns.newspacebackend.global.util.FileUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -17,31 +22,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.lgcns.newspacebackend.domain.user.dto.SignupRequestDto;
-import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
-import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
-import com.lgcns.newspacebackend.domain.user.service.UserService;
-import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
-import com.lgcns.newspacebackend.global.util.FileUtil;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.validation.Valid;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Slf4j
 @RestController

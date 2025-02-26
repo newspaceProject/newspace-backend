@@ -1,28 +1,11 @@
 package com.lgcns.newspacebackend.global.security.filter;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
-
 import com.lgcns.newspacebackend.domain.user.entity.User;
 import com.lgcns.newspacebackend.domain.user.entity.UserRole;
-import com.lgcns.newspacebackend.domain.user.repository.UserRepository;
 import com.lgcns.newspacebackend.domain.user.service.UserService;
 import com.lgcns.newspacebackend.global.security.UserDetailsServiceImpl;
 import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo;
 import com.lgcns.newspacebackend.global.security.jwt.JwtTokenUtil;
-
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,6 +14,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor

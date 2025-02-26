@@ -1,5 +1,4 @@
 package com.lgcns.newspacebackend.domain.user.dto;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

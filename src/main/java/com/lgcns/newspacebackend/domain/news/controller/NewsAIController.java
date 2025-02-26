@@ -16,6 +16,11 @@ import java.util.List;
 public class NewsAIController {
     private final NewsAIService newsAIService;
 
+    /**
+     * Groq AI를 이용하여 오늘 날짜의 과거 핫한 뉴스를 가져옵니다!
+     * @param keyword 카테고리명이나 키워드명을 입력하면 프롬프트 파라미터로 활용합니다.
+     * @return List<NewsResponseDto> 뉴스 10개
+     */
     @GetMapping
     public ResponseEntity<List<NewsResponseDto>> getNews(@RequestParam String keyword) {
         log.info("[GET] /api/news 요청 - category: {}", keyword); // 요청 로그

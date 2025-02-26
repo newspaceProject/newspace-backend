@@ -7,13 +7,8 @@ import com.lgcns.newspacebackend.global.security.filter.JwtAuthenticationFilter;
 import com.lgcns.newspacebackend.global.security.filter.JwtAuthorizationFilter;
 import com.lgcns.newspacebackend.global.security.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,12 +16,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -59,57 +50,6 @@ public class SecurityConfig{
 
         return filter;
     }
-	
-    
-    // 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//            .csrf(csrf -> csrf.disable()) // CSRF 비활성화
-//            .authorizeHttpRequests(auth -> auth
-//                .requestMatchers("/api/news/**").permitAll() // 인증 없이 허용
-//                .requestMatchers("/api/user/**").permitAll() // 인증 없이 허용
-//                .requestMatchers("/api/**").permitAll() // 인증 없이 허용                
-////                .requestMatchers("/api/notice/**").hasRole("ADMIN") // ADMIN만 접근 가능
-//                .anyRequest().permitAll() // 그 외 모든 요청은 인증 필요
-//            )
-//            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 X
-//            .formLogin(form -> form.disable()) // 폼 로그인 비활성화
-//            .logout(logout -> logout.disable()); // 로그아웃 비활성화
-//
-//        // JWT 필터 추가 (filter 처리 순서 오류 발생)
-//        // 분석 꼭 해라...
-//        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-//        http.addFilterBefore(jwtAuthenticationFilter(userRepository), UsernamePasswordAuthenticationFilter.class);
-////        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-//        
-//        // CORS 설정
-//        http.cors(Customizer.withDefaults());
-//      
-//        return http.build();
-//    }
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowCredentials(true);
-////        config.setAllowedOriginPatterns(List.of("*"));
-//		config.setAllowedOrigins(List.of(
-//                "http://kudong.kr:55020",
-//                "http://kudong.kr:55021",
-//                "http://kudong.kr:55022",
-//                "http://kudong.kr:55023",
-//                "http://kudong.kr:55025",
-//                "http://localhost:8080",
-//                "http://localhost:8070",
-//                "http://localhost:5173"));
-//        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-//        config.addAllowedHeader("*");
-//        config.addExposedHeader("*");
-//        config.setMaxAge(3600L);
-//        source.registerCorsConfiguration("/**", config);
-//        return new CorsFilter(source);
-//
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -119,25 +59,12 @@ public class SecurityConfig{
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-//        http.authorizeHttpRequests((authorizeHttpRequests) ->
-//                authorizeHttpRequests
-//                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.PATCH, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.DELETE, "/api/**").permitAll()
-//                        .anyRequest().permitAll()
-//        );
-
         http.securityMatchers(matchers ->
                 matchers.requestMatchers(CorsUtils::isPreFlightRequest)
         ).authorizeHttpRequests(auth ->
                 auth.anyRequest().permitAll()
         );
 
-//        http.addFilterBefore(corsFilter(), ChannelProcessingFilter.class);
         // JWT 인증 및 인가 필터 추가
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(userRepository), UsernamePasswordAuthenticationFilter.class);

@@ -1,5 +1,6 @@
 package com.lgcns.newspacebackend.domain.user.entity;
 
+import com.lgcns.newspacebackend.global.entity.TimeStamp;
 import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo.AccessTokenInfo;
 import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo.RefreshTokenInfo;
 import jakarta.persistence.*;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Entity
@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends TimeStamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,21 +47,13 @@ public class User {
 
     @Column(length = 250)
     private String accessToken;
-//    private Date accessTokenExpirationTime;
     private LocalDateTime accessTokenExpirationTime;
 
     @Column(length = 250)
     private String refreshToken;
-//    private Date refreshTokenExpirationTime;
     private LocalDateTime refreshTokenExpirationTime;
 
 	public void setTokenExpirationTime(LocalDateTime now) {
-//        // LocalDateTime을 ZonedDateTime으로 변환
-//        ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
-//
-//        // ZonedDateTime을 Date로 변환
-//        this.accessTokenExpirationTime = Date.from(zonedDateTime.toInstant());
-//        this.refreshTokenExpirationTime = Date.from(zonedDateTime.toInstant());
         this.accessTokenExpirationTime = now;
         this.refreshTokenExpirationTime = now;
 	};
@@ -84,13 +76,11 @@ public class User {
     
 	public void updateAccessTokenInfo(AccessTokenInfo accessTokenInfo) {
 		this.accessToken = accessTokenInfo.getAccessToken();
-//		this.accessTokenExpirationTime = accessTokenInfo.getAccessTokenExpireTime();
         this.accessTokenExpirationTime = convertToLocalDateTime(accessTokenInfo.getAccessTokenExpireTime());
 	}
 
 	public void updateRefreshTokenInfo(RefreshTokenInfo refreshTokenInfo) {
 		this.refreshToken = refreshTokenInfo.getRefreshToken();
-//		this.refreshTokenExpirationTime = refreshTokenInfo.getRefreshTokenExpireTime();
         this.refreshTokenExpirationTime = convertToLocalDateTime(refreshTokenInfo.getRefreshTokenExpireTime());
 	}
 
