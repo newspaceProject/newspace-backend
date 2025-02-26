@@ -154,7 +154,7 @@ public class UserController
 				fileName = "profile.png";
 			}
 
-			return ResponseEntity.ok().contentType(mediaType) // 이미지 형식에 맞게 수정
+			return ResponseEntity.ok().contentType(mediaType) // 파일 이미지 형식에 맞게 수정
 					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+fileName+"\"").body(resource);
 		}
 		else return ResponseEntity.notFound().build();
