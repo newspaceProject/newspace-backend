@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lgcns.newspacebackend.domain.news.dto.NewsResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class NewsAIService {
         this.chatClient = chatClient;
     }
 
+    @Async
     public List<NewsResponseDto> getPastNews(String keyword) {
         try {
             // 오늘 날짜 가져오기

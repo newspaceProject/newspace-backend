@@ -1,22 +1,5 @@
 package com.lgcns.newspacebackend.domain.user.service;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
 import com.lgcns.newspacebackend.domain.user.dto.SignupRequestDto;
 import com.lgcns.newspacebackend.domain.user.dto.UserInfoRequestDto;
 import com.lgcns.newspacebackend.domain.user.dto.UserInfoResponseDto;
@@ -26,11 +9,24 @@ import com.lgcns.newspacebackend.domain.user.repository.UserRepository;
 import com.lgcns.newspacebackend.global.security.UserDetailsImpl;
 import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo;
 import com.lgcns.newspacebackend.global.security.jwt.JwtTokenUtil;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -166,7 +162,7 @@ public class UserService
 	 *
 	 * @param accessToken 유저의 액세스 토큰
 	 * @return 주어진 액세스 토큰을 가진 유저
-	 * @throws BaseException 주어진 액세스 토큰을 가진 유저가 없을 경우
+	 * @throws IllegalArgumentException 주어진 액세스 토큰을 가진 유저가 없을 경우
 	 */
 	@Transactional(readOnly = true)
 	public User findUserByAccessToken(String accessToken)
@@ -188,12 +184,6 @@ public class UserService
 		// 리프레시 토큰의 만료 시간 확인
         LocalDateTime refreshTokenExpirationTime = userRepository
                 .findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
-//		// 리프레시 토큰의 만료 시간 확인
-//		Date refreshTokenExpirationDate = userRepository.findRefreshTokenExpirationTimeByRefreshToken(refreshToken);
-//
-//		// Date를 LocalDateTime으로 변환
-//		LocalDateTime refreshTokenExpirationTime = refreshTokenExpirationDate.toInstant().atZone(ZoneId.systemDefault())
-//				.toLocalDateTime();
 		// 현재 시간과 비교하여 유효 여부 반환
 		return !refreshTokenExpirationTime.isBefore(LocalDateTime.now());
 	}
