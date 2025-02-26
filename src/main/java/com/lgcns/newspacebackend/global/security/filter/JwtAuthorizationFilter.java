@@ -3,9 +3,11 @@ package com.lgcns.newspacebackend.global.security.filter;
 import com.lgcns.newspacebackend.domain.user.entity.User;
 import com.lgcns.newspacebackend.domain.user.entity.UserRole;
 import com.lgcns.newspacebackend.domain.user.service.UserService;
+import com.lgcns.newspacebackend.global.exception.BaseResponseStatus;
 import com.lgcns.newspacebackend.global.security.UserDetailsServiceImpl;
 import com.lgcns.newspacebackend.global.security.dto.JwtTokenInfo;
 import com.lgcns.newspacebackend.global.security.jwt.JwtTokenUtil;
+import com.lgcns.newspacebackend.global.security.util.FilterResponseUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -48,28 +50,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 			        if (jwtTokenUtil.validateToken(tokenSubstring)) {
 			        	Claims claims = jwtTokenUtil.getTokenClaims(tokenSubstring);
 			        	String username = (String) claims.get("username");
-			        	
-//			        	if(username == null) {
-//			        		log.error("[doFilterInternal] 클레임에서 아이디를 추출하지 못했습니다.");
-//	                        filterChain.doFilter(request, response);
-//	                        return;
-//			        	}
+
 			        	// 인증정보를 가져오는 메서드를 하단에 만들었다. 
 			        	setAuthentication(username);
 			        	// 필터체인으로 요청과 응답을 보내고 리턴
 			        	filterChain.doFilter(request, response);
-			        	return;
 			        }
 		        } catch(Exception e) {
 		        	log.error("[doFilterInternal] 토큰 검증 오류 발생", e);
 		        	
 		        	// * 액세스 토큰 만료 시
 	                User user = userService.findUserByAccessToken(tokenSubstring);
-//	                if (user == null) {
-//	                    log.error("[doFilterInternal] AccessToken으로 유저를 찾지 못했습니다.");
-//	                    filterChain.doFilter(request, response);
-//	                    return;
-//	                }
 
 	                // * 리프레시 토큰이 유효한 경우
 	                log.info("[doFilterInternal] 액세스 토큰 재발급 시도");
@@ -90,8 +81,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
 	                    setAuthentication(username);
 	                    filterChain.doFilter(request, response);
-	                    return;
-
 	                } else {
 	                    // * 리프레시 토큰이 만료된 경우
 	                    log.info("[doFilterInternal] 리프레시 토큰 만료");
@@ -99,10 +88,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	                    Cookie removedTokenCookie = jwtTokenUtil.removeTokenCookie();
 	                    response.addCookie(removedTokenCookie);
 
-//	                    // Filter 응답 처리를 위한 유틸 클래스 필요
-//	                    FilterResponseUtil.sendFilterResponse(response,
-//	                            HttpServletResponse.SC_UNAUTHORIZED,
-//	                            BaseResponseStatus.REFRESH_TOKEN_EXPIRED);
+	                    FilterResponseUtil.sendFilterResponse(response,
+	                            HttpServletResponse.SC_UNAUTHORIZED,
+	                            BaseResponseStatus.REFRESH_TOKEN_EXPIRED);
 	                }
 	            }
 	        } else {
@@ -133,20 +121,4 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     	// 2번째 매개변수는 비밀번호와 관련된 credential 이다 민감한 정보인 비밀번호를 token 에 담을 이유가 없기에 null 이 들어왔다.
     	return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()); 
     }
-    
-    
-//    @Override
-//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-//        log.debug("shouldNotFilter >>>>>>>>>>");
-//        
-//        String[] excludePath = { "/login", "/joinProc" };
-//       
-//        
-//        String uri = request.getRequestURI();
-//        boolean result = Arrays.stream(excludePath).anyMatch(uri::startsWith);
-//        log.debug(">>>" + result);
-//        
-//        return result;
-//    }
-    
 }
