@@ -1,4 +1,4 @@
-# newspace-frontend
+# newspace-backend
 
 
 <br>
@@ -13,17 +13,24 @@
     <tr>
         <!-- 첫 번째 팀원 -->
         <td align="center" width="50%">
-            <img src="https://avatars.githubusercontent.com/judymoody59" alt="Avatar" width="100px"/><br/>
-            <a href="https://github.com/judymoody59">채민주</a>
+            <img src="" alt="Avatar" width="100px"/><br/>
+            <a href="">이름</a>
             <br/>
-            <img src="https://github-readme-stats.vercel.app/api?username=judymoody59&show_icons=true&theme=transparent" alt="Minju's GitHub stats" width="350px"/>
+            <img src="" alt="'s GitHub stats" width="350px"/>
         </td>
         <!-- 두 번째 팀원 -->
         <td align="center" width="50%">
-            <img src="https://avatars.githubusercontent.com/Y0ungse" alt="Avatar" width="100px"/><br/>
-            <a href="https://github.com/hayong39">유영서</a>
+            <img src="" alt="Avatar" width="100px"/><br/>
+            <a href="">이름</a>
             <br/>
-            <img src="https://github-readme-stats.vercel.app/api?username=Y0ungse&show_icons=true&theme=transparent" alt="Yeongseo's GitHub stats" width="350px"/>
+            <img src="" alt="'s GitHub stats" width="350px"/>
+        </td>
+        <!-- 세 번째 팀원 -->
+        <td align="center" width="50%">
+            <img src="" alt="Avatar" width="100px"/><br/>
+            <a href="">이름</a>
+            <br/>
+            <img src="" alt="'s GitHub stats" width="350px"/>
         </td>
     </tr>
 </table>
