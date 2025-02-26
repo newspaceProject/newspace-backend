@@ -3,12 +3,21 @@
 
 <br>
 
-## 📍 프로젝트명: Newspace
+## 📍 프로젝트 설명
 <img src="https://github.com/user-attachments/assets/04d415b7-b379-4a0b-9aba-ff1d3609db85" width="300" />
 <br>
+25.02.21 ~ 25.02.26 | LG CNS AM Inspire Camp 1기 미니프로젝트 #1
 
 
-## 👩‍💻 팀원
+현대 사회에서는 뉴스가 빠르게 생산되고 실시간으로 소비되는 경향이 강합니다. 
+<br>
+이러한 환경 속에서 사용자가 과거의 중요한 이슈를 되짚어보는 일이 마냥 쉽지만은 않습니다.
+<br>
+이에 저희는 AI를 활용하여 오늘 날짜에 있었던 과거의 핫 뉴스를 제공하는 서비스, 뉴스페이스를 개발하였습니다.
+
+
+
+## 👩‍💻 Backend 팀원
 <table>
     <tr>
         <!-- 첫 번째 팀원 -->
@@ -17,6 +26,8 @@
             <a href="https://github.com/95hyun">현민영</a>
             <br/>
             <img src="https://github-readme-stats.vercel.app/api?username=95hyun&show_icons=true&theme=transparent" alt="95hyun's GitHub stats" width="300px"/>
+            <br/>
+            Spring AI 뉴스, 회원가입, 개인정보 관련, 카테고리/키워드/공지 CRUD, Spring Cloud Gateway 
         </td>
         <!-- 두 번째 팀원 -->
         <td align="center" width="33%">
@@ -24,6 +35,8 @@
             <a href="https://github.com/dhku">구동혁</a>
             <br/>
             <img src="https://github-readme-stats.vercel.app/api?username=dhku&show_icons=true&theme=transparent" alt="dhku's GitHub stats" width="300px"/>
+            <br/>
+            Jenkins CI/CD, docker-compose, 프로필 이미지 CRUD, Spring Cloud Eureka
         </td>
         <!-- 세 번째 팀원 -->
         <td align="center" width="33%">
@@ -31,6 +44,8 @@
             <a href="https://github.com/minnnseokk">정민석</a>
             <br/>
             <img src="https://github-readme-stats.vercel.app/api?username=minnnseokk&show_icons=true&theme=transparent" alt="minnnseokk's GitHub stats" width="300px"/>
+            <br/>
+            Spring Security, JWT 토큰-쿠키 처리 로직, 일반로그인, 로그아웃, 회원탈퇴
         </td>
     </tr>
 </table>
@@ -152,3 +167,11 @@
 ```
 <br/>
 
+## Notion
+https://www.notion.so/LG-CNS-1-19a5254cd716802b823ce385b7c067cf
+
+## Figma
+https://www.figma.com/design/ZrXlz23EOZntJSC8bKVg39/mini01
+
+## 시연 영상
+https://youtu.be/molgJbyQhHA?si=BL7uE3PzWK0G6AHR
