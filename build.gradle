@@ -75,6 +75,7 @@ dependencies {
     
     // Spring Boot 액추에이터 스타터 (옵션, 모니터링 용도)
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {
