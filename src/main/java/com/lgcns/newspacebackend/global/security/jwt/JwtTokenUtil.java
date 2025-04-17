@@ -69,10 +69,21 @@ public class JwtTokenUtil {
     public String getTokenFromRequest(HttpServletRequest httpServletRequest) {
         Cookie[] cookies = httpServletRequest.getCookies();
         if (cookies != null) {
-            for (Cookie cookie : cookies) {
+            for (Cookie cookie : cookies) 
+            {
+            	try
+				{
+					log.info("[JwtTokenUtil] Raw cookie: {}", URLDecoder.decode(cookie.getValue(), "UTF-8"));
+				}
+				catch(UnsupportedEncodingException e1)
+				{
+					e1.printStackTrace();
+				}
+            	
                 if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
                     try {
                         String decodedToken = URLDecoder.decode(cookie.getValue(), "UTF-8");
+                        log.info("[JwtTokenUtil] decodedToken cookie: {}", decodedToken);
                         return decodedToken;
                     } catch (UnsupportedEncodingException e) {
                         return null;
