@@ -62,12 +62,14 @@ public class SecurityConfig{
         http.securityMatchers(matchers ->
                 matchers.requestMatchers(CorsUtils::isPreFlightRequest)
         ).authorizeHttpRequests(auth ->
-                auth.anyRequest().permitAll()
+                //auth.anyRequest().permitAll()
+		        auth.requestMatchers("/api/user/login").permitAll()
+		        .anyRequest().authenticated()
         );
 
         // JWT 인증 및 인가 필터 추가
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter(userRepository), UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(jwtAuthenticationFilter(userRepository));
         http.cors(Customizer.withDefaults());
 
         return http.build();
