@@ -40,17 +40,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         // 요청에서 토큰 추출
         String token = jwtTokenUtil.getTokenFromRequest(request);
+        log.info("[JwtAuthFilter] Raw token: {}", token);
         // * 토큰이 존재한다면
         if (StringUtils.hasText(token)) {
 	        // 토큰 페이로드에서 본문만 분리
 	        String tokenSubstring = jwtTokenUtil.substringToken(token);
+	        log.info("[JwtAuthFilter] Substring token: {}", tokenSubstring);
         	try {
 			        // 분리된 토큰의 유효성 검토
 	        		// * 유효한 액세스 토큰이면 클레임 정보 추출 로직 수행
 			        if (jwtTokenUtil.validateToken(tokenSubstring)) {
 			        	Claims claims = jwtTokenUtil.getTokenClaims(tokenSubstring);
 			        	String username = (String) claims.get("username");
-
+			        	log.info("[JwtAuthFilter] Extracted username: {}", username);
 			        	// 인증정보를 가져오는 메서드를 하단에 만들었다. 
 			        	setAuthentication(username);
 			        	// 필터체인으로 요청과 응답을 보내고 리턴
@@ -118,6 +120,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
      */
     public Authentication createAuthentication(String username) {
     	UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    	log.info("[JwtAuthFilter] Loaded userDetails: {}", userDetails);
     	// 2번째 매개변수는 비밀번호와 관련된 credential 이다 민감한 정보인 비밀번호를 token 에 담을 이유가 없기에 null 이 들어왔다.
     	return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()); 
     }

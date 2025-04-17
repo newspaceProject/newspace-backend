@@ -9,10 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.lgcns.newspacebackend.domain.user.entity.User;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UserDetailsImpl implements UserDetails{
 	private final User user;
 	
 	public UserDetailsImpl(User userEntity) {
+	    if (userEntity == null) log.error("User is null in UserDetailsImpl constructor");
 		this.user = userEntity;
 	}
 	
